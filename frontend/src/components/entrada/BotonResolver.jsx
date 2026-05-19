@@ -7,16 +7,16 @@ export default function BotonResolver({ onClick, cargando }) {
       onClick={onClick}
       disabled={cargando}
       className="btn-primary"
-      style={{ marginTop: 8, fontSize: '0.97rem', letterSpacing: '0.02em' }}
+      style={{ marginTop: 6 }}
     >
       {cargando ? (
         <>
-          <span style={{ display: 'inline-block', animation: 'spin 0.8s linear infinite', fontSize: '1.1rem' }}>◌</span>
+          <span style={{ display: 'inline-block', animation: 'spin 0.8s linear infinite' }}>◌</span>
           Calculando...
         </>
       ) : (
         <>
-          <span style={{ fontSize: '1.15rem' }}>⟹</span>
+          <span style={{ fontSize: '1.1rem' }}>⟹</span>
           Resolver paso a paso
         </>
       )}
