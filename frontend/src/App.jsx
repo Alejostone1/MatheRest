@@ -10,7 +10,7 @@ import { useHistorial } from './hooks/useHistorial'
 export default function App() {
   const [expresion, setExpresion] = useState('')
   const [operacion, setOperacion] = useState('derivada')
-  const { resolver, cargando, error, resultado } = useResolver()
+  const { resolver, cargando, error, resultado, mensaje } = useResolver()
   const { historial, agregar } = useHistorial()
 
   const manejarResolver = async () => {
@@ -66,7 +66,7 @@ export default function App() {
         >
           <SelectorOperacion value={operacion} onChange={cambiarOperacion} />
           <EntradaExpresion value={expresion} onChange={setExpresion} operacion={operacion} />
-          <BotonResolver onClick={manejarResolver} cargando={cargando} />
+          <BotonResolver onClick={manejarResolver} cargando={cargando} mensaje={mensaje} />
         </form>
 
         {/* ── Error ─────────────────────────────────────── */}
