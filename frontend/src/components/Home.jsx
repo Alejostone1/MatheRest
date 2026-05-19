@@ -1,361 +1,406 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+/* ── Iconos SVG inline de tecnologías ─────────────────── */
+const SVG = {
+  python: (
+    <svg viewBox="0 0 128 128" width="100%" height="100%">
+      <linearGradient id="py1" x1="70.252" y1="1237.476" x2="170.659" y2="1151.089" gradientUnits="userSpaceOnUse" gradientTransform="matrix(.563 0 0 -.568 -29.15 707.17)">
+        <stop offset="0" stopColor="#5A9FD4"/><stop offset="1" stopColor="#306998"/>
+      </linearGradient>
+      <linearGradient id="py2" x1="209.474" y1="1098.811" x2="173.62" y2="1149.537" gradientUnits="userSpaceOnUse" gradientTransform="matrix(.563 0 0 -.568 -29.15 707.17)">
+        <stop offset="0" stopColor="#FFD43B"/><stop offset="1" stopColor="#FFE873"/>
+      </linearGradient>
+      <path fill="url(#py1)" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137H29.977c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491V67.234c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548V15.833c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zM50.037 9.557c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z"/>
+      <path fill="url(#py2)" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655H51.591c-6.756 0-12.346 5.783-12.346 12.548v23.515c0 6.693 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412H63.938v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zM77.809 87.927c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z"/>
+    </svg>
+  ),
+  react: (
+    <svg viewBox="-10.5 -9.45 21 18.9" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="0" cy="0" r="2" fill="#61DAFB"/>
+      <g stroke="#61DAFB" strokeWidth="1" fill="none">
+        <ellipse rx="10" ry="4.5"/>
+        <ellipse rx="10" ry="4.5" transform="rotate(60)"/>
+        <ellipse rx="10" ry="4.5" transform="rotate(120)"/>
+      </g>
+    </svg>
+  ),
+  fastapi: (
+    <svg viewBox="0 0 128 128" width="100%" height="100%">
+      <path d="M64 0C28.7 0 0 28.7 0 64s28.7 64 64 64 64-28.7 64-64S99.3 0 64 0zm1.3 110.6l1.7-34.5H45.5L70.3 17.4h2.1L70.7 52h21.9L67.4 110.6h-2.1z" fill="#05998b"/>
+    </svg>
+  ),
+  vite: (
+    <svg viewBox="0 0 410 404" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M399.641 59.525l-183.998 329.02c-3.799 6.793-13.559 6.833-17.415.072L10.29 59.597c-4.11-7.211 2.247-15.895 10.469-14.094l184.888 40.08a10.98 10.98 0 004.788-.001l182.957-40.05c8.206-1.795 14.558 6.863 10.249 14.093z" fill="url(#vg1)"/>
+      <path d="M292.965 1.67L156.801 28.836a5.5 5.5 0 00-4.421 5.315l-4.785 156.973a5.5 5.5 0 006.508 5.498l36.158-7.96a5.5 5.5 0 016.362 6.282l-10.745 51.082a5.5 5.5 0 006.631 6.391l22.374-5.246a5.5 5.5 0 016.633 6.378l-16.827 79.2c-1.045 4.921 5.534 7.607 8.316 3.432l1.8-2.754 98.977-197.561a5.5 5.5 0 00-5.001-7.923l-37.21.529a5.5 5.5 0 01-5.48-6.835l24.31-99.208A5.5 5.5 0 00292.965 1.67z" fill="url(#vg2)"/>
+      <defs>
+        <linearGradient id="vg1" x1="6" y1="32.5" x2="235" y2="344" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#41D1FF"/><stop offset="1" stopColor="#BD34FE"/>
+        </linearGradient>
+        <linearGradient id="vg2" x1="194.651" y1="8.818" x2="236.076" y2="292.989" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FF3E00"/><stop offset=".776" stopColor="#C000FF"/><stop offset="1" stopColor="#FF0079"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  ),
+  tailwind: (
+    <svg viewBox="0 0 54 33" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z" fill="#06B6D4"/>
+    </svg>
+  ),
+  vercel: (
+    <svg viewBox="0 0 76 65" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="#000"/>
+    </svg>
+  ),
+  render: (
+    <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill="#46E3B7"/>
+      <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fill="#000" fontWeight="900" fontSize="22" fontFamily="system-ui">R</text>
+    </svg>
+  ),
+  sympy: (
+    <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill="#3B6EA5"/>
+      <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="#fff" fontWeight="900" fontSize="20" fontFamily="serif">Σ</text>
+    </svg>
+  ),
+  katex: (
+    <svg viewBox="0 0 60 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="60" height="40" rx="8" fill="#329894"/>
+      <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="#fff" fontWeight="900" fontSize="14" fontFamily="serif">KaTeX</text>
+    </svg>
+  ),
+  pdf: (
+    <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill="#DC2626"/>
+      <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="#fff" fontWeight="900" fontSize="12" fontFamily="system-ui">PDF</text>
+    </svg>
+  ),
+  excel: (
+    <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="8" fill="#217346"/>
+      <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fill="#fff" fontWeight="900" fontSize="11" fontFamily="system-ui">XLSX</text>
+    </svg>
+  ),
+}
 
 const TECNOLOGIAS = [
-  { nombre: 'Python 3.13',  rol: 'Lenguaje del backend',          color: '#3b82f6', bg: '#eff6ff', icono: '🐍' },
-  { nombre: 'SymPy 1.14',   rol: 'Motor de cálculo simbólico',    color: '#7c3aed', bg: '#f5f3ff', icono: '∑' },
-  { nombre: 'FastAPI',      rol: 'API REST del servidor',          color: '#059669', bg: '#f0fdf4', icono: '⚡' },
-  { nombre: 'React 18',     rol: 'Interfaz de usuario',            color: '#0ea5e9', bg: '#f0f9ff', icono: '⚛' },
-  { nombre: 'TailwindCSS',  rol: 'Estilos y diseño visual',        color: '#0891b2', bg: '#ecfeff', icono: '🎨' },
-  { nombre: 'KaTeX',        rol: 'Renderizado de fórmulas LaTeX',  color: '#dc2626', bg: '#fef2f2', icono: 'ƒ' },
-  { nombre: 'jsPDF',        rol: 'Exportación a PDF',              color: '#9a3412', bg: '#fff7ed', icono: '📄' },
-  { nombre: 'Vercel',       rol: 'Despliegue del frontend',        color: '#0f172a', bg: '#f8fafc', icono: '▲' },
-  { nombre: 'Render',       rol: 'Despliegue del backend',         color: '#7c3aed', bg: '#f5f3ff', icono: '☁' },
+  { icon: 'python',   nombre: 'Python 3.13',   rol: 'Lenguaje del backend',         tag: 'Backend' },
+  { icon: 'sympy',    nombre: 'SymPy 1.14',    rol: 'Cálculo simbólico exacto',     tag: 'Matemáticas' },
+  { icon: 'fastapi',  nombre: 'FastAPI',        rol: 'API REST del servidor',         tag: 'Backend' },
+  { icon: 'react',    nombre: 'React 18',       rol: 'Interfaz de usuario',           tag: 'Frontend' },
+  { icon: 'vite',     nombre: 'Vite 5',         rol: 'Compilador y dev server',       tag: 'Frontend' },
+  { icon: 'tailwind', nombre: 'TailwindCSS',    rol: 'Sistema de estilos',            tag: 'Frontend' },
+  { icon: 'katex',    nombre: 'KaTeX',          rol: 'Renderizado LaTeX en tiempo real', tag: 'Frontend' },
+  { icon: 'pdf',      nombre: 'jsPDF',          rol: 'Exportación a PDF',             tag: 'Export' },
+  { icon: 'excel',    nombre: 'SheetJS',        rol: 'Exportación a Excel',           tag: 'Export' },
+  { icon: 'vercel',   nombre: 'Vercel',         rol: 'Hosting del frontend (CDN)',    tag: 'Deploy' },
+  { icon: 'render',   nombre: 'Render',         rol: 'Hosting del backend (Cloud)',   tag: 'Deploy' },
 ]
 
+const TAG_COLORS = {
+  Backend:      { bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe' },
+  Matemáticas:  { bg: '#f5f3ff', color: '#6d28d9', border: '#ddd6fe' },
+  Frontend:     { bg: '#ecfdf5', color: '#065f46', border: '#a7f3d0' },
+  Export:       { bg: '#fff7ed', color: '#9a3412', border: '#fed7aa' },
+  Deploy:       { bg: '#f8fafc', color: '#0f172a', border: '#e2e8f0' },
+}
+
 const DERIVADAS = [
-  { caso: 'Potencia simple',        formula: 'd/dx[xⁿ] = n·xⁿ⁻¹',              ejemplo: 'x⁵  →  5x⁴' },
-  { caso: 'Potencia con coeficiente', formula: 'd/dx[axⁿ] = a·n·xⁿ⁻¹',         ejemplo: '3x⁴  →  12x³' },
-  { caso: 'Constante',              formula: 'd/dx[c] = 0',                      ejemplo: '7  →  0' },
-  { caso: 'Lineal',                 formula: 'd/dx[ax+b] = a',                   ejemplo: '5x+2  →  5' },
-  { caso: 'Suma / Resta',           formula: 'd/dx[f±g] = f\'±g\'',              ejemplo: 'x³+x²  →  3x²+2x' },
-  { caso: 'Regla del producto',     formula: 'd/dx[f·g] = f\'g + fg\'',          ejemplo: 'x²eˣ  →  2xeˣ+x²eˣ' },
-  { caso: 'Regla del cociente',     formula: 'd/dx[f/g] = (f\'g−fg\')/g²',      ejemplo: 'sin(x)/x  →  (xcos(x)−sin(x))/x²' },
-  { caso: 'Regla de la cadena',     formula: 'd/dx[f(g(x))] = f\'(g)·g\'',      ejemplo: 'sin(x²)  →  2x·cos(x²)' },
-  { caso: 'Función seno',           formula: 'd/dx[sin(x)] = cos(x)',            ejemplo: 'sin(x)  →  cos(x)' },
-  { caso: 'Función coseno',         formula: 'd/dx[cos(x)] = −sin(x)',           ejemplo: 'cos(x)  →  −sin(x)' },
-  { caso: 'Exponencial natural',    formula: 'd/dx[eˣ] = eˣ',                   ejemplo: 'eˣ  →  eˣ' },
-  { caso: 'Logaritmo natural',      formula: 'd/dx[ln(x)] = 1/x',               ejemplo: 'ln(x)  →  1/x' },
+  ['D1',  'Potencia simple',          'd/dx[xⁿ] = n·xⁿ⁻¹',          'x⁵ → 5x⁴'],
+  ['D2',  'Potencia con coeficiente', 'd/dx[axⁿ] = a·n·xⁿ⁻¹',       '3x⁴ → 12x³'],
+  ['D3',  'Constante',                'd/dx[c] = 0',                  '7 → 0'],
+  ['D4',  'Función lineal',           'd/dx[ax+b] = a',               '5x+2 → 5'],
+  ['D5',  'Suma / Resta',             "(f±g)' = f'±g'",               'x³+x² → 3x²+2x'],
+  ['D6',  'Regla del producto',       "(f·g)' = f'g + fg'",           'x²eˣ → 2xeˣ+x²eˣ'],
+  ['D7',  'Regla del cociente',       "(f/g)' = (f'g−fg')/g²",       'sin(x)/x → ...'],
+  ['D8',  'Regla de la cadena',       "[f(g(x))]' = f'(g)·g'",       'sin(x²) → 2x·cos(x²)'],
+  ['D9',  'Función seno',             'd/dx[sin(x)] = cos(x)',        'sin(x) → cos(x)'],
+  ['D10', 'Función coseno',           'd/dx[cos(x)] = −sin(x)',       'cos(x) → −sin(x)'],
+  ['D11', 'Exponencial natural',      'd/dx[eˣ] = eˣ',               'eˣ → eˣ'],
+  ['D12', 'Logaritmo natural',        'd/dx[ln(x)] = 1/x',           'ln(x) → 1/x'],
 ]
 
 const INTEGRALES = [
-  { caso: 'Regla de la potencia',   formula: '∫xⁿ dx = xⁿ⁺¹/(n+1) + C',        ejemplo: 'x³  →  x⁴/4 + C' },
-  { caso: 'Constante',              formula: '∫k dx = kx + C',                   ejemplo: '5  →  5x + C' },
-  { caso: 'Logarítmica (1/x)',      formula: '∫(1/x) dx = ln|x| + C',            ejemplo: '1/x  →  ln|x| + C' },
-  { caso: 'Función seno',           formula: '∫sin(x) dx = −cos(x) + C',         ejemplo: 'sin(x)  →  −cos(x)+C' },
-  { caso: 'Función coseno',         formula: '∫cos(x) dx = sin(x) + C',          ejemplo: 'cos(x)  →  sin(x)+C' },
-  { caso: 'Exponencial natural',    formula: '∫eˣ dx = eˣ + C',                  ejemplo: 'eˣ  →  eˣ + C' },
-  { caso: 'Sustitución simple',     formula: '∫f(g(x))·g\'(x) dx = F(g(x))+C',  ejemplo: '2x·eˣ²  →  eˣ² + C' },
-  { caso: 'Integración por partes', formula: '∫u dv = uv − ∫v du',               ejemplo: 'x·eˣ  →  eˣ(x−1) + C' },
+  ['I1', 'Regla de la potencia',    '∫xⁿ dx = xⁿ⁺¹/(n+1) + C',       'x³ → x⁴/4 + C'],
+  ['I2', 'Constante',               '∫k dx = kx + C',                  '5 → 5x + C'],
+  ['I3', 'Logarítmica',             '∫(1/x) dx = ln|x| + C',           '1/x → ln|x|+C'],
+  ['I4', 'Función seno',            '∫sin(x) dx = −cos(x) + C',        'sin(x) → −cos(x)+C'],
+  ['I5', 'Función coseno',          '∫cos(x) dx = sin(x) + C',         'cos(x) → sin(x)+C'],
+  ['I6', 'Exponencial natural',     '∫eˣ dx = eˣ + C',                 'eˣ → eˣ + C'],
+  ['I7', 'Sustitución simple',      "∫f(g)·g' dx = F(g(x)) + C",      '2xeˣ² → eˣ²+C'],
+  ['I8', 'Integración por partes',  '∫u dv = uv − ∫v du',              'xeˣ → eˣ(x−1)+C'],
 ]
 
-function Separador() {
-  return <div style={{ height: 1, background: '#e2e8f0', margin: '0 0 40px' }} />
-}
-
-function SeccionTitulo({ numero, titulo, subtitulo }) {
-  return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: 8,
-          background: '#2563eb', color: '#fff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 800, fontSize: '0.9rem', flexShrink: 0,
-        }}>{numero}</div>
-        <h2 style={{ color: '#0f172a', fontWeight: 800, fontSize: '1.25rem', margin: 0 }}>{titulo}</h2>
-      </div>
-      {subtitulo && <p style={{ color: '#64748b', fontSize: '0.92rem', margin: '0 0 0 44px' }}>{subtitulo}</p>}
-    </div>
-  )
-}
-
+/* ── Componente ─────────────────────────────────────────── */
 export default function Home({ onEntrar }) {
+  const [tabMath, setTabMath] = useState('derivadas')
+
   return (
-    <div style={{ background: '#f1f5f9', minHeight: '100vh', paddingBottom: 60 }}>
+    <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', paddingTop: 48, paddingBottom: 48 }}>
-        <div style={{ maxWidth: 860, margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
-
-          {/* Etiqueta académica */}
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: '#eff6ff', border: '1px solid #bfdbfe',
-            borderRadius: 20, padding: '6px 16px', marginBottom: 24,
-            fontSize: '0.82rem', color: '#1d4ed8', fontWeight: 600,
-          }}>
-            🎓 Trabajo Final · Matemáticas 3
-          </div>
-
-          <h1 style={{
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
-            fontWeight: 900, color: '#0f172a',
-            margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.1,
-          }}>
-            Asistente Matemático<br />
-            <span style={{ color: '#2563eb' }}>Inteligente</span>
-          </h1>
-
-          <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: 640, margin: '0 auto 32px', lineHeight: 1.7 }}>
-            Aplicación web que analiza expresiones matemáticas, detecta automáticamente
-            el método de solución y explica <strong style={{ color: '#0f172a' }}>paso a paso</strong> el proceso de
-            derivación e integración simbólica.
-          </p>
-
-          {/* Stats */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 36, flexWrap: 'wrap' }}>
-            {[
-              { n: '12', t: 'Casos de derivadas' },
-              { n: '8',  t: 'Casos de integrales' },
-              { n: '20', t: 'Casos garantizados' },
-              { n: '100%', t: 'Cálculo simbólico' },
-            ].map(({ n, t }) => (
-              <div key={t} style={{ textAlign: 'center' }}>
-                <p style={{ fontWeight: 900, fontSize: '1.8rem', color: '#2563eb', margin: 0, lineHeight: 1 }}>{n}</p>
-                <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '4px 0 0', fontWeight: 500 }}>{t}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <button
-            onClick={onEntrar}
-            style={{
-              background: '#2563eb', color: '#fff',
-              border: 'none', borderRadius: 12,
-              padding: '15px 40px', fontSize: '1.05rem',
-              fontWeight: 700, cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(37,99,235,0.35)',
-              transition: 'all 0.15s',
-              display: 'inline-flex', alignItems: 'center', gap: 10,
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.45)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(37,99,235,0.35)' }}
-          >
-            <span style={{ fontSize: '1.2rem' }}>⟹</span>
-            Abrir la aplicación
+      {/* ══ NAV ════════════════════════════════════════════ */}
+      <nav style={{
+        background: '#fff', borderBottom: '1px solid #e2e8f0',
+        padding: '0 32px', height: 56,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        position: 'sticky', top: 0, zIndex: 100,
+        boxShadow: '0 1px 3px rgba(15,23,42,0.05)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 30, height: 30, background: '#2563eb', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 900, fontSize: '0.9rem', fontFamily: 'serif' }}>∫</div>
+          <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.95rem', letterSpacing: '-0.01em' }}>Asistente Matemático</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <a href="#tecnologias" style={{ color: '#64748b', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 500 }} onMouseEnter={e=>e.target.style.color='#0f172a'} onMouseLeave={e=>e.target.style.color='#64748b'}>Tecnologías</a>
+          <a href="#matematica" style={{ color: '#64748b', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 500 }} onMouseEnter={e=>e.target.style.color='#0f172a'} onMouseLeave={e=>e.target.style.color='#64748b'}>Cobertura</a>
+          <a href="#equipo" style={{ color: '#64748b', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 500 }} onMouseEnter={e=>e.target.style.color='#0f172a'} onMouseLeave={e=>e.target.style.color='#64748b'}>Equipo</a>
+          <button onClick={onEntrar} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, padding: '7px 18px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', transition: 'background 0.15s' }}
+            onMouseEnter={e=>e.currentTarget.style.background='#1d4ed8'} onMouseLeave={e=>e.currentTarget.style.background='#2563eb'}>
+            Abrir app →
           </button>
+        </div>
+      </nav>
+
+      {/* ══ HERO ════════════════════════════════════════════ */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '72px 32px 64px' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+
+          {/* Left */}
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 20, padding: '5px 14px', marginBottom: 20 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}/>
+              <span style={{ color: '#1d4ed8', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.05em' }}>TRABAJO FINAL · MATEMÁTICAS 3</span>
+            </div>
+
+            <h1 style={{ fontSize: '2.6rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 18px' }}>
+              Asistente<br/>
+              <span style={{ color: '#2563eb' }}>Matemático</span><br/>
+              Inteligente
+            </h1>
+
+            <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.7, margin: '0 0 28px', maxWidth: 440 }}>
+              Analiza expresiones, detecta el método de resolución y explica
+              <strong style={{ color: '#0f172a' }}> paso a paso </strong>
+              el proceso completo de derivación e integración simbólica.
+            </p>
+
+            <div style={{ display: 'flex', gap: 12, marginBottom: 36 }}>
+              <button onClick={onEntrar} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '13px 28px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 4px 14px rgba(37,99,235,0.3)', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 8 }}
+                onMouseEnter={e=>{ e.currentTarget.style.background='#1d4ed8'; e.currentTarget.style.boxShadow='0 6px 20px rgba(37,99,235,0.4)' }}
+                onMouseLeave={e=>{ e.currentTarget.style.background='#2563eb'; e.currentTarget.style.boxShadow='0 4px 14px rgba(37,99,235,0.3)' }}>
+                Resolver ahora <span style={{ fontSize: '1.1rem' }}>→</span>
+              </button>
+              <a href="#matematica" style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 10, padding: '13px 22px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', transition: 'all 0.15s' }}
+                onMouseEnter={e=>e.currentTarget.style.background='#e2e8f0'} onMouseLeave={e=>e.currentTarget.style.background='#f1f5f9'}>
+                Ver cobertura
+              </a>
+            </div>
+
+            <div style={{ display: 'flex', gap: 28 }}>
+              {[['20','Casos totales'],['12','Derivadas'],['8','Integrales']].map(([n,t])=>(
+                <div key={t}>
+                  <p style={{ fontWeight: 900, fontSize: '1.7rem', color: '#2563eb', margin: 0, lineHeight: 1 }}>{n}</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', margin: '3px 0 0', fontWeight: 500 }}>{t}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: preview card */}
+          <div style={{ position: 'relative' }}>
+            <div style={{ background: '#0f172a', borderRadius: 16, padding: '20px 24px', boxShadow: '0 20px 60px rgba(15,23,42,0.25)', border: '1px solid #1e293b' }}>
+              {/* Barra de ventana */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+                {['#ff5f57','#febc2e','#28c840'].map(c=><div key={c} style={{ width:11,height:11,borderRadius:'50%',background:c }}/>)}
+                <div style={{ flex:1, height:20, background:'#1e293b', borderRadius:6, marginLeft:8 }}/>
+              </div>
+              {/* Input simulado */}
+              <div style={{ background:'#1e293b', borderRadius:8, padding:'10px 14px', marginBottom:12, display:'flex', alignItems:'center', gap:10 }}>
+                <span style={{ color:'#334155', fontSize:'0.75rem', fontWeight:600 }}>f(x) =</span>
+                <code style={{ color:'#60a5fa', fontSize:'0.95rem', fontFamily:'monospace', fontWeight:700 }}>x² · eˣ</code>
+              </div>
+              {/* Método */}
+              <div style={{ background:'#1e3a5f', borderRadius:8, padding:'8px 14px', marginBottom:12, display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ width:7,height:7,borderRadius:'50%',background:'#3b82f6' }}/>
+                <span style={{ color:'#93c5fd', fontSize:'0.8rem', fontWeight:600 }}>Regla del producto detectada</span>
+                <span style={{ marginLeft:'auto', color:'#1d4ed8', fontSize:'0.7rem', background:'#172554', borderRadius:12, padding:'2px 8px' }}>92%</span>
+              </div>
+              {/* Pasos */}
+              {[
+                ['1','Identificar f(x)·g(x)','f(x) = x²,  g(x) = eˣ'],
+                ['2','Aplicar (f·g)\' = f\'g + fg\'','Fórmula del producto'],
+                ['3','Derivar individualmente','f\'= 2x,  g\'= eˣ'],
+                ['4','Resultado final','eˣ(x² + 2x)'],
+              ].map(([n,t,f])=>(
+                <div key={n} style={{ display:'flex', alignItems:'flex-start', gap:10, marginBottom:8 }}>
+                  <div style={{ width:22,height:22,borderRadius:'50%',background:'#2563eb',color:'#fff',fontSize:'0.7rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>{n}</div>
+                  <div>
+                    <p style={{ color:'#e2e8f0',fontSize:'0.78rem',fontWeight:600,margin:'0 0 2px' }}>{t}</p>
+                    <code style={{ color:'#64748b',fontSize:'0.72rem',fontFamily:'monospace' }}>{f}</code>
+                  </div>
+                </div>
+              ))}
+              {/* Resultado */}
+              <div style={{ background:'#052e16',border:'1px solid #166534',borderRadius:8,padding:'10px 14px',marginTop:12,textAlign:'center' }}>
+                <span style={{ color:'#4ade80',fontSize:'0.72rem',fontWeight:700,display:'block',marginBottom:4 }}>RESULTADO FINAL</span>
+                <code style={{ color:'#86efac',fontSize:'1.1rem',fontFamily:'monospace',fontWeight:700 }}>eˣ · (x² + 2x)</code>
+              </div>
+            </div>
+
+            {/* Floating badge */}
+            <div style={{ position:'absolute', top:-14, right:-14, background:'#22c55e',color:'#fff',borderRadius:20,padding:'5px 14px',fontSize:'0.75rem',fontWeight:800,boxShadow:'0 4px 12px rgba(34,197,94,0.4)' }}>
+              ✓ 100% Exacto
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: '48px 24px 0' }}>
-
-        {/* ── CRÉDITOS ACADÉMICOS ───────────────────────── */}
-        <div style={{
-          background: '#ffffff', border: '1px solid #e2e8f0',
-          borderRadius: 14, padding: '28px 32px', marginBottom: 40,
-          boxShadow: '0 1px 4px rgba(15,23,42,0.06)',
-        }}>
-          <SeccionTitulo numero="①" titulo="Información académica" />
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
-
-            {/* Asignatura */}
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '16px 20px' }}>
-              <p style={{ color: '#94a3b8', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Asignatura</p>
-              <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '1rem', margin: '0 0 4px' }}>Matemáticas 3</p>
-              <p style={{ color: '#64748b', fontSize: '0.82rem', margin: 0 }}>Cálculo Diferencial e Integral</p>
-            </div>
-
-            {/* Docente */}
-            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '16px 20px' }}>
-              <p style={{ color: '#3b82f6', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Docente</p>
-              <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '1rem', margin: '0 0 4px' }}>Cristhian Camilo Sánchez Ceballos</p>
-              <p style={{ color: '#3b82f6', fontSize: '0.82rem', margin: 0 }}>Profesor de Matemáticas 3</p>
-            </div>
-
-            {/* Estudiantes */}
-            <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '16px 20px' }}>
-              <p style={{ color: '#16a34a', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Desarrollado por</p>
-              <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 4px' }}>Daniel Colorado</p>
-              <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 6px' }}>Alejandro Piedrahita</p>
-              <p style={{ color: '#16a34a', fontSize: '0.78rem', margin: 0 }}>Trabajo Final de la asignatura</p>
-            </div>
-
-          </div>
+      {/* ══ TECNOLOGÍAS ════════════════════════════════════ */}
+      <div id="tecnologias" style={{ padding: '72px 32px', maxWidth: 960, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Stack técnico</p>
+          <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Tecnologías implementadas</h2>
+          <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0, maxWidth: 520, marginInline: 'auto' }}>
+            Seleccionadas para garantizar precisión matemática simbólica y una experiencia de usuario fluida
+          </p>
         </div>
 
-        <Separador />
-
-        {/* ── QUÉ HACE LA APLICACIÓN ─────────────────────── */}
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 32px', marginBottom: 40, boxShadow: '0 1px 4px rgba(15,23,42,0.06)' }}>
-          <SeccionTitulo
-            numero="②"
-            titulo="¿Qué hace la aplicación?"
-            subtitulo="Funcionalidades principales implementadas para el trabajo final"
-          />
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-            {[
-              { icono: '🔍', titulo: 'Detección automática', desc: 'Identifica el método a usar: regla del producto, cociente, cadena, sustitución, partes, entre otros.' },
-              { icono: '📐', titulo: 'Cálculo simbólico exacto', desc: 'Utiliza SymPy para obtener resultados algebraicamente exactos, no aproximaciones numéricas.' },
-              { icono: '📋', titulo: 'Pasos explicativos', desc: 'Cada solución se desglosa paso a paso con la fórmula aplicada y la justificación matemática.' },
-              { icono: '🔢', titulo: 'Teclado matemático', desc: 'Entrada de expresiones mediante teclado virtual con funciones trigonométricas, potencias y operadores.' },
-              { icono: '👁', titulo: 'Vista previa LaTeX', desc: 'Renderiza la expresión en notación matemática formal en tiempo real mientras el usuario escribe.' },
-              { icono: '📄', titulo: 'Exportación PDF / Excel', desc: 'Genera un informe profesional en PDF o un libro de Excel con todos los pasos de la solución.' },
-            ].map(({ icono, titulo, desc }) => (
-              <div key={titulo} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '16px 18px' }}>
-                <p style={{ fontSize: '1.5rem', margin: '0 0 8px', lineHeight: 1 }}>{icono}</p>
-                <p style={{ color: '#0f172a', fontWeight: 700, fontSize: '0.88rem', margin: '0 0 6px' }}>{titulo}</p>
-                <p style={{ color: '#64748b', fontSize: '0.78rem', margin: 0, lineHeight: 1.5 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Separador />
-
-        {/* ── COBERTURA MATEMÁTICA ──────────────────────── */}
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 32px', marginBottom: 40, boxShadow: '0 1px 4px rgba(15,23,42,0.06)' }}>
-          <SeccionTitulo
-            numero="③"
-            titulo="Cobertura matemática"
-            subtitulo="20 casos garantizados al 100 % — todos los temas vistos en Matemáticas 3"
-          />
-
-          {/* Derivadas */}
-          <h3 style={{ color: '#1d4ed8', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ background: '#dbeafe', border: '1px solid #93c5fd', borderRadius: 6, padding: '2px 10px', fontSize: '0.78rem' }}>∂</span>
-            Derivadas — 12 casos
-          </h3>
-          <div style={{ overflowX: 'auto', marginBottom: 28 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-              <thead>
-                <tr style={{ background: '#f8fafc' }}>
-                  {['#', 'Caso', 'Fórmula aplicada', 'Ejemplo'].map((h) => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid #e2e8f0' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {DERIVADAS.map((d, i) => (
-                  <tr key={d.caso} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#ffffff' : '#fafafa' }}>
-                    <td style={{ padding: '9px 12px', color: '#94a3b8', fontWeight: 700 }}>D{i + 1}</td>
-                    <td style={{ padding: '9px 12px', color: '#0f172a', fontWeight: 600 }}>{d.caso}</td>
-                    <td style={{ padding: '9px 12px', color: '#1d4ed8', fontFamily: 'monospace', fontSize: '0.78rem' }}>{d.formula}</td>
-                    <td style={{ padding: '9px 12px', color: '#475569', fontFamily: 'monospace', fontSize: '0.78rem' }}>{d.ejemplo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Integrales */}
-          <h3 style={{ color: '#15803d', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ background: '#dcfce7', border: '1px solid #86efac', borderRadius: 6, padding: '2px 10px', fontSize: '0.78rem' }}>∫</span>
-            Integrales — 8 casos
-          </h3>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-              <thead>
-                <tr style={{ background: '#f8fafc' }}>
-                  {['#', 'Caso', 'Fórmula aplicada', 'Ejemplo'].map((h) => (
-                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: '#64748b', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid #e2e8f0' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {INTEGRALES.map((d, i) => (
-                  <tr key={d.caso} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#ffffff' : '#fafafa' }}>
-                    <td style={{ padding: '9px 12px', color: '#94a3b8', fontWeight: 700 }}>I{i + 1}</td>
-                    <td style={{ padding: '9px 12px', color: '#0f172a', fontWeight: 600 }}>{d.caso}</td>
-                    <td style={{ padding: '9px 12px', color: '#15803d', fontFamily: 'monospace', fontSize: '0.78rem' }}>{d.formula}</td>
-                    <td style={{ padding: '9px 12px', color: '#475569', fontFamily: 'monospace', fontSize: '0.78rem' }}>{d.ejemplo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <Separador />
-
-        {/* ── TECNOLOGÍAS ───────────────────────────────── */}
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 32px', marginBottom: 40, boxShadow: '0 1px 4px rgba(15,23,42,0.06)' }}>
-          <SeccionTitulo
-            numero="④"
-            titulo="Tecnologías implementadas"
-            subtitulo="Stack completo seleccionado para garantizar precisión matemática y experiencia de usuario óptima"
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
-            {TECNOLOGIAS.map(({ nombre, rol, color, bg, icono }) => (
-              <div key={nombre} style={{ background: bg, border: `1px solid ${color}30`, borderRadius: 10, padding: '14px 16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <span style={{ fontSize: '1.1rem' }}>{icono}</span>
-                  <p style={{ color, fontWeight: 800, fontSize: '0.88rem', margin: 0 }}>{nombre}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14 }}>
+          {TECNOLOGIAS.map(({ icon, nombre, rol, tag }) => {
+            const tc = TAG_COLORS[tag]
+            return (
+              <div key={nombre} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 16px', transition: 'all 0.2s', cursor: 'default' }}
+                onMouseEnter={e=>{ e.currentTarget.style.boxShadow='0 4px 20px rgba(15,23,42,0.10)'; e.currentTarget.style.borderColor='#cbd5e1'; e.currentTarget.style.transform='translateY(-2px)' }}
+                onMouseLeave={e=>{ e.currentTarget.style.boxShadow='none'; e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.transform='none' }}>
+                <div style={{ width: 44, height: 44, marginBottom: 12 }}>
+                  {SVG[icon]}
                 </div>
-                <p style={{ color: '#64748b', fontSize: '0.75rem', margin: 0, lineHeight: 1.4 }}>{rol}</p>
+                <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.88rem', margin: '0 0 4px' }}>{nombre}</p>
+                <p style={{ color: '#64748b', fontSize: '0.73rem', margin: '0 0 10px', lineHeight: 1.4 }}>{rol}</p>
+                <span style={{ background: tc.bg, color: tc.color, border: `1px solid ${tc.border}`, borderRadius: 20, padding: '2px 8px', fontSize: '0.65rem', fontWeight: 700 }}>{tag}</span>
               </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ══ COBERTURA MATEMÁTICA ═══════════════════════════ */}
+      <div id="matematica" style={{ background: '#fff', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', padding: '72px 32px' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Contenido académico</p>
+            <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Cobertura matemática</h2>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>Todos los casos vistos en Matemáticas 3 — 20 casos garantizados al 100 %</p>
+          </div>
+
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: 4, background: '#f1f5f9', borderRadius: 10, padding: 4, marginBottom: 24, width: 'fit-content', marginInline: 'auto' }}>
+            {[['derivadas','∂  Derivadas (12)'],['integrales','∫  Integrales (8)']].map(([id,label])=>(
+              <button key={id} onClick={()=>setTabMath(id)} style={{ padding:'8px 24px', borderRadius:8, border:'none', fontWeight:700, fontSize:'0.85rem', cursor:'pointer', transition:'all 0.15s', background: tabMath===id ? '#fff' : 'transparent', color: tabMath===id ? '#0f172a' : '#64748b', boxShadow: tabMath===id ? '0 1px 4px rgba(15,23,42,0.1)' : 'none' }}>
+                {label}
+              </button>
             ))}
           </div>
-        </div>
 
-        <Separador />
-
-        {/* ── ARQUITECTURA ─────────────────────────────── */}
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 32px', marginBottom: 40, boxShadow: '0 1px 4px rgba(15,23,42,0.06)' }}>
-          <SeccionTitulo
-            numero="⑤"
-            titulo="Arquitectura del sistema"
-            subtitulo="Separación en capas: frontend desacoplado del backend mediante API REST"
-          />
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            {[
-              {
-                titulo: 'Frontend — Vercel',
-                color: '#0ea5e9', bg: '#f0f9ff', border: '#bae6fd',
-                items: ['React 18 + Vite', 'TailwindCSS', 'KaTeX (LaTeX)', 'Axios (HTTP)', 'jsPDF / xlsx'],
-              },
-              {
-                titulo: 'API REST — FastAPI',
-                color: '#059669', bg: '#f0fdf4', border: '#bbf7d0',
-                items: ['POST /api/v1/solve', 'Validación Pydantic', 'CORS habilitado', 'Docs en /docs', 'Health en /health'],
-              },
-              {
-                titulo: 'Backend — Render',
-                color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe',
-                items: ['Python 3.13', 'SymPy (cálculo exacto)', 'Detector de métodos', 'Generador de pasos', 'Simplificador'],
-              },
-            ].map(({ titulo, color, bg, border, items }) => (
-              <div key={titulo} style={{ flex: 1, minWidth: 200, background: bg, border: `1px solid ${border}`, borderRadius: 10, padding: '16px 18px' }}>
-                <p style={{ color, fontWeight: 800, fontSize: '0.88rem', margin: '0 0 12px', borderBottom: `1px solid ${border}`, paddingBottom: 8 }}>{titulo}</p>
-                {items.map((it) => (
-                  <div key={it} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
-                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: color, flexShrink: 0 }} />
-                    <span style={{ color: '#475569', fontSize: '0.8rem' }}>{it}</span>
-                  </div>
+          {/* Tabla */}
+          <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
+              <thead>
+                <tr style={{ background: tabMath === 'derivadas' ? '#eff6ff' : '#f0fdf4' }}>
+                  {['ID','Caso','Fórmula aplicada','Ejemplo'].map(h=>(
+                    <th key={h} style={{ padding:'11px 16px', textAlign:'left', color: tabMath==='derivadas'?'#1d4ed8':'#15803d', fontWeight:700, fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'0.08em', borderBottom:'1px solid #e2e8f0' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(tabMath==='derivadas' ? DERIVADAS : INTEGRALES).map(([id,caso,formula,ejemplo],i)=>(
+                  <tr key={id} style={{ borderBottom:'1px solid #f1f5f9', background: i%2===0?'#fff':'#fafafa' }}>
+                    <td style={{ padding:'10px 16px', fontWeight:800, color: tabMath==='derivadas'?'#2563eb':'#16a34a', fontFamily:'monospace', fontSize:'0.78rem' }}>{id}</td>
+                    <td style={{ padding:'10px 16px', color:'#0f172a', fontWeight:600 }}>{caso}</td>
+                    <td style={{ padding:'10px 16px', color:'#475569', fontFamily:'monospace', fontSize:'0.78rem' }}>{formula}</td>
+                    <td style={{ padding:'10px 16px', color:'#64748b', fontFamily:'monospace', fontSize:'0.78rem' }}>{ejemplo}</td>
+                  </tr>
                 ))}
-              </div>
-            ))}
+              </tbody>
+            </table>
           </div>
         </div>
+      </div>
 
-        {/* ── CTA FINAL ─────────────────────────────────── */}
-        <div style={{
-          background: '#ffffff', border: '1px solid #bfdbfe',
-          borderRadius: 14, padding: '32px', textAlign: 'center',
-          boxShadow: '0 1px 4px rgba(37,99,235,0.08)',
-        }}>
-          <p style={{ color: '#0f172a', fontWeight: 800, fontSize: '1.2rem', margin: '0 0 8px' }}>
-            ¿Listo para resolver?
-          </p>
-          <p style={{ color: '#64748b', fontSize: '0.92rem', margin: '0 0 24px' }}>
-            Ingresa cualquier expresión de derivadas o integrales y obtén la solución completa paso a paso.
-          </p>
-          <button
-            onClick={onEntrar}
-            style={{
-              background: '#2563eb', color: '#fff', border: 'none',
-              borderRadius: 10, padding: '13px 36px',
-              fontSize: '1rem', fontWeight: 700, cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(37,99,235,0.3)',
-              transition: 'all 0.15s',
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#1d4ed8' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = '#2563eb' }}
-          >
-            <span>⟹</span> Ir a la aplicación
-          </button>
+      {/* ══ EQUIPO ══════════════════════════════════════════ */}
+      <div id="equipo" style={{ padding: '72px 32px', maxWidth: 960, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Créditos académicos</p>
+          <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Equipo de desarrollo</h2>
+          <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>Trabajo Final presentado para la asignatura Matemáticas 3</p>
         </div>
 
-        {/* Footer */}
-        <p style={{ textAlign: 'center', color: '#cbd5e1', fontSize: '0.72rem', marginTop: 40 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
+
+          {/* Estudiante 1 */}
+          {[
+            { ini:'DC', nombre:'Daniel Colorado', rol:'Desarrollador', desc:'Diseño del sistema, implementación del backend Python/SymPy y lógica de detección de métodos matemáticos.', color:'#2563eb', bg:'#eff6ff', border:'#bfdbfe' },
+            { ini:'AP', nombre:'Alejandro Piedrahita', rol:'Desarrollador', desc:'Desarrollo del frontend React, diseño de interfaz, integración API, exportación PDF/Excel y despliegue.', color:'#7c3aed', bg:'#f5f3ff', border:'#ddd6fe' },
+          ].map(({ ini, nombre, rol, desc, color, bg, border }) => (
+            <div key={nombre} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 24px', transition: 'all 0.2s' }}
+              onMouseEnter={e=>{ e.currentTarget.style.borderColor=border; e.currentTarget.style.boxShadow=`0 4px 20px ${color}18` }}
+              onMouseLeave={e=>{ e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.boxShadow='none' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:16 }}>
+                <div style={{ width:56,height:56,borderRadius:14,background:bg,border:`2px solid ${border}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.2rem',fontWeight:900,color,letterSpacing:'-0.02em',flexShrink:0 }}>{ini}</div>
+                <div>
+                  <p style={{ fontWeight:800, color:'#0f172a', fontSize:'1rem', margin:'0 0 2px' }}>{nombre}</p>
+                  <span style={{ background:bg, color, border:`1px solid ${border}`, borderRadius:20, padding:'2px 10px', fontSize:'0.7rem', fontWeight:700 }}>{rol}</span>
+                </div>
+              </div>
+              <p style={{ color:'#64748b', fontSize:'0.83rem', lineHeight:1.6, margin:0 }}>{desc}</p>
+            </div>
+          ))}
+
+          {/* Docente */}
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '28px 24px', transition: 'all 0.2s' }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor='#86efac'; e.currentTarget.style.boxShadow='0 4px 20px rgba(34,197,94,0.1)' }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.boxShadow='none' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:16 }}>
+              <div style={{ width:56,height:56,borderRadius:14,background:'#f0fdf4',border:'2px solid #86efac',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.2rem',fontWeight:900,color:'#15803d',flexShrink:0 }}>CS</div>
+              <div>
+                <p style={{ fontWeight:800, color:'#0f172a', fontSize:'1rem', margin:'0 0 2px' }}>Cristhian Camilo Sánchez Ceballos</p>
+                <span style={{ background:'#f0fdf4', color:'#15803d', border:'1px solid #86efac', borderRadius:20, padding:'2px 10px', fontSize:'0.7rem', fontWeight:700 }}>Docente</span>
+              </div>
+            </div>
+            <p style={{ color:'#64748b', fontSize:'0.83rem', lineHeight:1.6, margin:'0 0 12px' }}>
+              Profesor de Matemáticas 3 — Cálculo Diferencial e Integral. Propuso el desarrollo de una herramienta que refuerce el aprendizaje de los métodos de derivación e integración.
+            </p>
+            <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:8, padding:'8px 12px', display:'flex', alignItems:'center', gap:8 }}>
+              <span style={{ fontSize:'0.9rem' }}>🎓</span>
+              <span style={{ color:'#15803d', fontSize:'0.78rem', fontWeight:600 }}>Asignatura: Matemáticas 3</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ══ CTA FINAL ═══════════════════════════════════════ */}
+      <div style={{ background: '#0f172a', padding: '60px 32px', textAlign: 'center' }}>
+        <p style={{ color: '#94a3b8', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 14px' }}>Listo para usar</p>
+        <h2 style={{ color: '#f8fafc', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+          Empieza a resolver expresiones
+        </h2>
+        <p style={{ color: '#475569', fontSize: '0.95rem', margin: '0 0 30px' }}>
+          Ingresa cualquier derivada o integral y obtén la solución completa paso a paso
+        </p>
+        <button onClick={onEntrar} style={{ background:'#2563eb', color:'#fff', border:'none', borderRadius:12, padding:'14px 36px', fontSize:'1rem', fontWeight:800, cursor:'pointer', boxShadow:'0 4px 20px rgba(37,99,235,0.4)', transition:'all 0.15s', display:'inline-flex', alignItems:'center', gap:10 }}
+          onMouseEnter={e=>{ e.currentTarget.style.background='#1d4ed8'; e.currentTarget.style.boxShadow='0 6px 24px rgba(37,99,235,0.5)' }}
+          onMouseLeave={e=>{ e.currentTarget.style.background='#2563eb'; e.currentTarget.style.boxShadow='0 4px 20px rgba(37,99,235,0.4)' }}>
+          Abrir la aplicación <span style={{ fontSize:'1.2rem' }}>→</span>
+        </button>
+        <p style={{ color:'#334155', fontSize:'0.72rem', marginTop:32 }}>
           Daniel Colorado · Alejandro Piedrahita — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
         </p>
-
       </div>
+
     </div>
   )
 }
