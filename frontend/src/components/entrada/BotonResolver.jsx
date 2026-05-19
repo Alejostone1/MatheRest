@@ -6,19 +6,21 @@ export default function BotonResolver({ onClick, cargando }) {
       type="button"
       onClick={onClick}
       disabled={cargando}
-      className="btn-primary w-full flex items-center justify-center gap-2 mt-2"
+      className="btn-primary"
+      style={{ marginTop: 8, fontSize: '0.97rem', letterSpacing: '0.02em' }}
     >
       {cargando ? (
         <>
-          <span className="animate-spin text-xl">⟳</span>
+          <span style={{ display: 'inline-block', animation: 'spin 0.8s linear infinite', fontSize: '1.1rem' }}>◌</span>
           Calculando...
         </>
       ) : (
         <>
-          <span className="text-xl">🧮</span>
+          <span style={{ fontSize: '1.15rem' }}>⟹</span>
           Resolver paso a paso
         </>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </button>
   )
 }

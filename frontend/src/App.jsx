@@ -14,62 +14,122 @@ export default function App() {
   const { historial, agregar } = useHistorial()
 
   const manejarResolver = async () => {
-    await resolver({ expresion, operacion })
-    if (expresion.trim()) {
-      agregar({ expresion, operacion })
-    }
+    const ok = await resolver({ expresion, operacion })
+    if (expresion.trim()) agregar({ expresion, operacion })
+  }
+
+  const cambiarOperacion = (op) => {
+    setOperacion(op)
+    setExpresion('')
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div style={{ minHeight: '100vh', paddingTop: 32, paddingBottom: 48, paddingLeft: 16, paddingRight: 16 }}>
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
 
-        {/* Header */}
-        <header className="text-center">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-            🧠 Asistente Matemático
+        {/* ── Header ──────────────────────────────────────── */}
+        <header style={{ textAlign: 'center', marginBottom: 32 }} className="anim-fade">
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: '#0a1628',
+            border: '1px solid #1e3352',
+            borderRadius: 8,
+            padding: '4px 14px',
+            fontSize: '0.72rem',
+            color: '#60a5fa',
+            fontWeight: 600,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginBottom: 16,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+            Sistema activo
+          </div>
+
+          <h1 style={{
+            fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
+            fontWeight: 800,
+            color: '#e2e8f0',
+            margin: '0 0 8px',
+            letterSpacing: '-0.02em',
+          }}>
+            Asistente Matemático
           </h1>
-          <p className="text-white/60 text-lg">
-            Analiza expresiones · Detecta el método · Explica paso a paso
+          <p style={{ color: '#475569', fontSize: '1rem', margin: '0 0 20px' }}>
+            Analiza · Detecta el método · Explica paso a paso
           </p>
-          <div className="flex justify-center gap-4 mt-3">
-            {['12 derivadas', '8 integrales', '20 casos garantizados'].map((t) => (
-              <span key={t} className="badge bg-blue-500/20 text-blue-300 text-xs">
-                ✓ {t}
-              </span>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
+            {[
+              { n: '12', t: 'Derivadas' },
+              { n: '8',  t: 'Integrales' },
+              { n: '20', t: 'Casos totales' },
+            ].map(({ n, t }) => (
+              <div key={t} style={{
+                background: '#0a1628',
+                border: '1px solid #1e3352',
+                borderRadius: 8,
+                padding: '6px 16px',
+                textAlign: 'center',
+              }}>
+                <p style={{ color: '#2563eb', fontWeight: 800, fontSize: '1.1rem', margin: 0 }}>{n}</p>
+                <p style={{ color: '#334155', fontSize: '0.7rem', margin: 0 }}>{t}</p>
+              </div>
             ))}
           </div>
         </header>
 
-        {/* Panel de entrada */}
+        {/* ── Panel de entrada ─────────────────────────────── */}
         <form
-          className="card"
+          className="card anim-up"
+          style={{ marginBottom: 16 }}
           onSubmit={(e) => { e.preventDefault(); manejarResolver() }}
         >
-          <SelectorOperacion value={operacion} onChange={(op) => { setOperacion(op); setExpresion('') }} />
+          <SelectorOperacion value={operacion} onChange={cambiarOperacion} />
           <EntradaExpresion value={expresion} onChange={setExpresion} operacion={operacion} />
           <BotonResolver onClick={manejarResolver} cargando={cargando} />
         </form>
 
-        {/* Error */}
+        {/* ── Error ────────────────────────────────────────── */}
         <Error mensaje={error} />
 
-        {/* Resultado */}
+        {/* ── Resultado ────────────────────────────────────── */}
         {resultado && <TarjetaResultado resultado={resultado} />}
 
-        {/* Historial */}
+        {/* ── Historial ────────────────────────────────────── */}
         {historial.length > 0 && !resultado && (
-          <div className="card">
-            <h3 className="text-white/80 font-semibold mb-3 text-sm">🕐 Historial reciente</h3>
-            <div className="flex flex-wrap gap-2">
-              {historial.slice(0, 6).map((h, i) => (
+          <div className="card anim-fade" style={{ marginTop: 16 }}>
+            <p style={{ color: '#334155', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+              Historial reciente
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {historial.slice(0, 8).map((h, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => { setExpresion(h.expresion); setOperacion(h.operacion) }}
-                  className="badge bg-white/10 text-white/70 hover:bg-white/20 cursor-pointer"
+                  style={{
+                    background: '#0a1628',
+                    border: '1px solid #1e293b',
+                    color: '#64748b',
+                    borderRadius: 8,
+                    padding: '5px 12px',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    fontFamily: 'monospace',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#2563eb'; e.currentTarget.style.color = '#93c5fd' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#1e293b'; e.currentTarget.style.color = '#64748b' }}
                 >
-                  <span className="text-xs text-white/40">{h.operacion === 'derivada' ? 'd/dx' : '∫'}</span>
+                  <span style={{ color: '#1e3a8a', fontSize: '0.7rem' }}>
+                    {h.operacion === 'derivada' ? 'd/dx' : '∫'}
+                  </span>
                   {h.expresion}
                 </button>
               ))}
@@ -77,10 +137,11 @@ export default function App() {
           </div>
         )}
 
-        {/* Footer */}
-        <footer className="text-center text-white/30 text-xs pb-4">
-          Powered by Python · SymPy · FastAPI · React · TailwindCSS
+        {/* ── Footer ───────────────────────────────────────── */}
+        <footer style={{ textAlign: 'center', marginTop: 40, color: '#1e293b', fontSize: '0.72rem' }}>
+          Python · SymPy · FastAPI · React · TailwindCSS
         </footer>
+
       </div>
     </div>
   )

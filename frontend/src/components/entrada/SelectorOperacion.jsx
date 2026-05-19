@@ -1,30 +1,67 @@
 import React from 'react'
 
+const OPCIONES = [
+  {
+    id: 'derivada',
+    icono: '∂',
+    titulo: 'Derivada',
+    subtitulo: 'd/dx [ f(x) ]',
+  },
+  {
+    id: 'integral',
+    icono: '∫',
+    titulo: 'Integral',
+    subtitulo: '∫ f(x) dx',
+  },
+]
+
 export default function SelectorOperacion({ value, onChange }) {
   return (
-    <div className="mb-4">
-      <label className="block text-white/80 text-sm font-medium mb-2">
+    <div style={{ marginBottom: 16 }}>
+      <p style={{ color: '#64748b', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
         Operación
-      </label>
-      <div className="flex gap-3">
-        {[
-          { id: 'derivada', label: "d/dx — Derivada", icon: "∂" },
-          { id: 'integral', label: "∫ — Integral indefinida", icon: "∫" },
-        ].map(({ id, label, icon }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => onChange(id)}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold text-sm transition-all duration-200 ${
-              value === id
-                ? 'border-blue-400 bg-blue-500/30 text-white shadow-lg shadow-blue-500/20'
-                : 'border-white/20 bg-white/5 text-white/60 hover:border-white/40 hover:text-white'
-            }`}
-          >
-            <span className="text-xl">{icon}</span>
-            {label}
-          </button>
-        ))}
+      </p>
+      <div style={{ display: 'flex', gap: 10 }}>
+        {OPCIONES.map(({ id, icono, titulo, subtitulo }) => {
+          const activo = value === id
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onChange(id)}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '12px 16px',
+                borderRadius: 10,
+                border: activo ? '1.5px solid #2563eb' : '1.5px solid #1e293b',
+                background: activo ? '#0f1e38' : '#0a1628',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              <span style={{
+                fontSize: '1.6rem',
+                lineHeight: 1,
+                color: activo ? '#60a5fa' : '#334155',
+                fontFamily: 'serif',
+                transition: 'color 0.15s',
+              }}>
+                {icono}
+              </span>
+              <div style={{ textAlign: 'left' }}>
+                <p style={{ color: activo ? '#e2e8f0' : '#64748b', fontWeight: 600, fontSize: '0.9rem', margin: 0, transition: 'color 0.15s' }}>
+                  {titulo}
+                </p>
+                <p style={{ color: activo ? '#60a5fa' : '#334155', fontSize: '0.75rem', margin: 0, fontFamily: 'monospace', transition: 'color 0.15s' }}>
+                  {subtitulo}
+                </p>
+              </div>
+            </button>
+          )
+        })}
       </div>
     </div>
   )
