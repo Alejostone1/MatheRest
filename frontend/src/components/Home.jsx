@@ -245,16 +245,6 @@ export default function Home({ onEntrar }) {
 
           {/* Left */}
           <div className="home-hero-left">
-            {/* Badge profesional — sin burbuja, solo borde izquierdo */}
-            <div className="home-hero-badge" style={{ borderLeft: '3px solid #2563eb', paddingLeft: 12, marginBottom: 24, display: 'inline-block' }}>
-              <p style={{ color: '#2563eb', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
-                Trabajo Final · Matemáticas 3
-              </p>
-              <p style={{ color: '#64748b', fontWeight: 500, fontSize: '0.78rem', margin: '3px 0 0' }}>
-                Cálculo Diferencial e Integral
-              </p>
-            </div>
-
             <h1 className="home-h1">
               Asistente<br/>
               <span style={{ color: '#2563eb' }}>Matemático</span><br/>
