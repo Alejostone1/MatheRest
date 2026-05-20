@@ -29,14 +29,17 @@ const STYLES = `
     .home-nav-links a { display: none; }
     .home-hero      { padding: 40px 20px 48px; }
     .home-hero-grid { grid-template-columns: 1fr; gap: 36px; }
-    .home-h1        { font-size: 2rem; }
+    .home-h1        { font-size: 2rem; text-align: center; }
     .home-mock      { display: none; }
     .home-section   { padding: 48px 20px; }
     .home-tech-card { flex: 0 0 148px; }
     .home-team-grid { grid-template-columns: 1fr; }
-    .home-cta-row   { flex-direction: column; }
+    .home-cta-row   { flex-direction: column; align-items: center; }
     .home-cta-row a, .home-cta-row button { width: 100%; justify-content: center; box-sizing: border-box; }
-    .home-stats     { gap: 20px; }
+    .home-stats     { gap: 20px; justify-content: center; }
+    .home-hero-left { text-align: center; }
+    .home-hero-badge { justify-content: center; }
+    .home-hero-desc { text-align: center; }
   }
 
   @media (max-width: 480px) {
@@ -241,9 +244,9 @@ export default function Home({ onEntrar }) {
         <div className="home-hero-grid">
 
           {/* Left */}
-          <div>
+          <div className="home-hero-left">
             {/* Badge profesional — sin burbuja, solo borde izquierdo */}
-            <div style={{ borderLeft: '3px solid #2563eb', paddingLeft: 12, marginBottom: 24 }}>
+            <div className="home-hero-badge" style={{ borderLeft: '3px solid #2563eb', paddingLeft: 12, marginBottom: 24, display: 'inline-block' }}>
               <p style={{ color: '#2563eb', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
                 Trabajo Final · Matemáticas 3
               </p>
@@ -258,7 +261,7 @@ export default function Home({ onEntrar }) {
               Inteligente
             </h1>
 
-            <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.7, margin: '0 0 28px' }}>
+            <p className="home-hero-desc" style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.7, margin: '0 0 28px' }}>
               Resuelve derivadas, integrales indefinidas, definidas y dobles.
               Detecta el método automáticamente y explica cada paso de forma
               <strong style={{ color: '#0f172a' }}> clara y rigurosa</strong>.
