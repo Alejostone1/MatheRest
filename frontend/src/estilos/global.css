@@ -148,33 +148,41 @@
     padding: 20px;
   }
 
-  /* Teclado */
+  /* ── Teclado matemático (tema claro) ─── */
   .key-btn {
     border-radius: 8px;
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 700;
     padding: 10px 4px;
     cursor: pointer;
     transition: transform 0.08s, background-color 0.12s, box-shadow 0.1s;
-    border: 1px solid transparent;
+    border: 1.5px solid transparent;
     user-select: none;
+    line-height: 1.2;
   }
   .key-btn:active { transform: scale(0.88); }
+  .key-btn:focus  { outline: 2px solid #2563eb; outline-offset: 2px; }
 
   .key-func  { background-color: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
-  .key-func:hover  { background-color: #ddd6fe; }
+  .key-func:hover  { background-color: #ddd6fe; box-shadow: 0 1px 4px rgba(91,33,182,0.18); }
+
   .key-power { background-color: #dbeafe; color: #1e40af; border-color: #93c5fd; }
-  .key-power:hover { background-color: #bfdbfe; }
+  .key-power:hover { background-color: #bfdbfe; box-shadow: 0 1px 4px rgba(37,99,235,0.2); }
+
   .key-var   { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
-  .key-var:hover   { background-color: #bbf7d0; }
+  .key-var:hover   { background-color: #bbf7d0; box-shadow: 0 1px 4px rgba(21,128,61,0.18); }
+
   .key-op    { background-color: #f1f5f9; color: #334155; border-color: #cbd5e1; }
-  .key-op:hover    { background-color: #e2e8f0; }
+  .key-op:hover    { background-color: #e2e8f0; box-shadow: 0 1px 3px rgba(15,23,42,0.08); }
+
   .key-num   { background-color: #ffffff; color: #0f172a; border-color: #e2e8f0; box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
-  .key-num:hover   { background-color: #f1f5f9; }
+  .key-num:hover   { background-color: #f8fafc; box-shadow: 0 2px 5px rgba(15,23,42,0.10); }
+
   .key-del   { background-color: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
-  .key-del:hover   { background-color: #fee2e2; }
+  .key-del:hover   { background-color: #fee2e2; box-shadow: 0 1px 4px rgba(185,28,28,0.18); }
+
   .key-clear { background-color: #fff7ed; color: #c2410c; border-color: #fdba74; }
-  .key-clear:hover { background-color: #ffedd5; }
+  .key-clear:hover { background-color: #ffedd5; box-shadow: 0 1px 4px rgba(194,65,12,0.18); }
 }
 
 /* ── Animations ─────────────────────────────────────────── */
@@ -198,11 +206,33 @@
 .anim-delay4 { animation-delay: 0.20s }
 .anim-delay5 { animation-delay: 0.25s }
 
-/* KaTeX light override */
-.katex         { color: #0f172a !important; }
-.katex-display { margin: 0 !important; }
+/* ── KaTeX overrides ─────────────────────────────────────── */
+.katex         { color: #0f172a !important; font-size: 1.1em !important; }
+.katex-display { margin: 4px 0 !important; }
+.katex-display > .katex { font-size: 1.2em !important; }
 
-/* Scrollbar */
+/* ── Responsive: App calculator ─────────────────────────── */
+@media (max-width: 640px) {
+  .card { padding: 16px; border-radius: 12px; }
+
+  .input-math { font-size: 0.95rem; padding: 10px 14px; }
+
+  /* Navbar credits hidden on mobile (redundant text) */
+  .nav-credits { display: none !important; }
+
+  /* Key buttons smaller on mobile */
+  .key-btn { padding: 8px 2px; font-size: 0.75rem; border-radius: 6px; }
+}
+
+@media (max-width: 480px) {
+  /* KaTeX renders smaller on very small screens */
+  .katex         { font-size: 0.95em !important; }
+  .katex-display > .katex { font-size: 1em !important; }
+
+  .btn-primary { font-size: 0.9rem; padding: 11px 16px; }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar       { width:5px; height:5px }
 ::-webkit-scrollbar-track { background:#f1f5f9 }
 ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px }

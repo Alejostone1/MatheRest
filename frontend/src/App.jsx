@@ -8,26 +8,31 @@ import Error from './components/comunes/Error'
 import { useResolver } from './hooks/useResolver'
 import { useHistorial } from './hooks/useHistorial'
 
+const LIMITES_INICIALES = { inf: '', sup: '', infY: '', supY: '' }
+
 export default function App() {
-  const [pagina, setPagina] = useState('home')   // 'home' | 'app'
+  const [pagina, setPagina]   = useState('home')
   const [expresion, setExpresion] = useState('')
   const [operacion, setOperacion] = useState('derivada')
+  const [limites,   setLimites]   = useState(LIMITES_INICIALES)
   const { resolver, cargando, error, resultado, mensaje } = useResolver()
   const { historial, agregar } = useHistorial()
 
   const manejarResolver = async () => {
-    await resolver({ expresion, operacion })
+    await resolver({ expresion, operacion, limites })
     if (expresion.trim()) agregar({ expresion, operacion })
   }
 
-  const cambiarOperacion = (op) => { setOperacion(op); setExpresion('') }
+  const cambiarOperacion = (op) => {
+    setOperacion(op)
+    setExpresion('')
+    setLimites(LIMITES_INICIALES)
+  }
 
-  // ── Página principal ────────────────────────────────────
   if (pagina === 'home') {
     return <Home onEntrar={() => setPagina('app')} />
   }
 
-  // ── Calculadora ─────────────────────────────────────────
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9', paddingBottom: 60 }}>
 
@@ -54,8 +59,8 @@ export default function App() {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
-            Daniel Colorado · Alejandro Piedrahita
+          <span style={{ color: '#94a3b8', fontSize: '0.75rem', display: 'none' }} className="nav-credits">
+            D. Colorado · A. Piedrahita · S. Patiño
           </span>
           <button
             onClick={() => setPagina('home')}
@@ -68,9 +73,9 @@ export default function App() {
       </nav>
 
       {/* Contenido */}
-      <div style={{ maxWidth: 780, margin: '0 auto', padding: '32px 16px 0' }}>
+      <div style={{ maxWidth: 820, margin: '0 auto', padding: '32px 16px 0' }}>
 
-        {/* Header reducido */}
+        {/* Header */}
         <header style={{ textAlign: 'center', marginBottom: 28 }} className="anim-fade">
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px', letterSpacing: '-0.02em' }}>
             Resolver expresión
@@ -87,7 +92,13 @@ export default function App() {
           onSubmit={(e) => { e.preventDefault(); manejarResolver() }}
         >
           <SelectorOperacion value={operacion} onChange={cambiarOperacion} />
-          <EntradaExpresion value={expresion} onChange={setExpresion} operacion={operacion} />
+          <EntradaExpresion
+            value={expresion}
+            onChange={setExpresion}
+            operacion={operacion}
+            limites={limites}
+            onLimitesChange={setLimites}
+          />
           <BotonResolver onClick={manejarResolver} cargando={cargando} mensaje={mensaje} />
         </form>
 
@@ -105,7 +116,7 @@ export default function App() {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => { setExpresion(h.expresion); setOperacion(h.operacion) }}
+                  onClick={() => { setExpresion(h.expresion); setOperacion(h.operacion); setLimites(LIMITES_INICIALES) }}
                   style={{
                     background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569',
                     borderRadius: 8, padding: '5px 12px', fontSize: '0.78rem',
@@ -115,7 +126,9 @@ export default function App() {
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#2563eb'; e.currentTarget.style.color = '#2563eb'; e.currentTarget.style.background = '#eff6ff' }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569'; e.currentTarget.style.background = '#f8fafc' }}
                 >
-                  <span style={{ color: '#93c5fd', fontSize: '0.7rem' }}>{h.operacion === 'derivada' ? 'd/dx' : '∫'}</span>
+                  <span style={{ color: '#93c5fd', fontSize: '0.7rem' }}>
+                    {h.operacion === 'derivada' ? 'd/dx' : '∫'}
+                  </span>
                   {h.expresion}
                 </button>
               ))}
@@ -124,7 +137,7 @@ export default function App() {
         )}
 
         <footer style={{ textAlign: 'center', marginTop: 48, color: '#cbd5e1', fontSize: '0.72rem' }}>
-          Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
+          Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
         </footer>
       </div>
     </div>

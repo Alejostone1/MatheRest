@@ -6,10 +6,10 @@ export function useResolver() {
   const [cargando,  setCargando]  = useState(false)
   const [error,     setError]     = useState(null)
   const [resultado, setResultado] = useState(null)
-  const [mensaje,   setMensaje]   = useState('')   // mensaje de espera
+  const [mensaje,   setMensaje]   = useState('')
   const timerRef = useRef(null)
 
-  const resolver = async ({ expresion, operacion }) => {
+  const resolver = async ({ expresion, operacion, limites = {} }) => {
     if (!expresion.trim()) {
       toast.error('Ingresa una expresión matemática')
       return
@@ -20,14 +20,13 @@ export function useResolver() {
     setResultado(null)
     setMensaje('Calculando...')
 
-    // Si tarda más de 4 s, avisamos que el servidor está despertando
     timerRef.current = setTimeout(() => {
       setMensaje('El servidor está despertando (plan gratuito). Espera hasta 60 s…')
       toast.loading('Despertando servidor...', { id: 'wake', duration: 60000 })
     }, 4000)
 
     try {
-      const data = await resolverExpresion({ expresion, operacion })
+      const data = await resolverExpresion({ expresion, operacion, limites })
       setResultado(data)
       toast.dismiss('wake')
       toast.success('¡Resuelto!')

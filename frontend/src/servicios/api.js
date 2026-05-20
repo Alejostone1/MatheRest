@@ -4,12 +4,20 @@ const BASE_URL = import.meta.env.VITE_API_URL || '/api/v1'
 
 const cliente = axios.create({
   baseURL: BASE_URL,
-  timeout: 70000,          // 70 s — Render free tier tarda hasta 60 s en despertar
+  timeout: 70000,
   headers: { 'Content-Type': 'application/json' },
 })
 
-export async function resolverExpresion({ expresion, operacion }) {
-  const { data } = await cliente.post('/solve', { expresion, operacion })
+export async function resolverExpresion({ expresion, operacion, limites = {} }) {
+  const body = {
+    expresion,
+    operacion,
+    limite_inferior:   limites.inf   || null,
+    limite_superior:   limites.sup   || null,
+    limite_inferior_y: limites.infY  || null,
+    limite_superior_y: limites.supY  || null,
+  }
+  const { data } = await cliente.post('/solve', body)
   return data
 }
 

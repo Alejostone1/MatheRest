@@ -24,6 +24,10 @@ def generar_pasos(expresion: str, operacion: str, metodo: str, calculo: dict) ->
     try:
         if operacion == "derivada":
             return _pasos_derivada(expresion, metodo, calculo)
+        if operacion == "integral_definida":
+            return _pasos_integral_definida(expresion, calculo)
+        if operacion == "integral_doble":
+            return _pasos_integral_doble(expresion, calculo)
         return _pasos_integral(expresion, metodo, calculo)
     except Exception:
         return _pasos_fallback(expresion, operacion, calculo)
@@ -457,5 +461,123 @@ def _pasos_logaritmo(resultado: str, latex_r: str) -> list:
             "formula": resultado,
             "formula_latex": latex_r,
             "explicacion": "La constante C representa la familia de primitivas.",
+        },
+    ]
+
+
+# ────────────────────────────────────────────────────────────────────
+# INTEGRALES DEFINIDAS
+# ────────────────────────────────────────────────────────────────────
+
+def _pasos_integral_definida(expresion: str, calculo: dict) -> list:
+    resultado = calculo.get("simplificado", calculo.get("resultado", "?"))
+    latex_r   = calculo.get("simplificado_latex", calculo.get("resultado_latex", "?"))
+    a = calculo.get("limite_inferior", "a")
+    b = calculo.get("limite_superior", "b")
+
+    try:
+        expr = _parse(expresion)
+        x_sym = sp.Symbol("x")
+        primitiva = sp.integrate(expr, x_sym)
+        prim_latex = sp.latex(primitiva)
+    except Exception:
+        prim_latex = "F(x)"
+
+    return [
+        {
+            "numero": 1,
+            "titulo": "Plantear la integral definida",
+            "descripcion": f"Calculamos ∫ de {a} a {b} de ({expresion}) dx",
+            "formula": f"∫_{a}^{b} ({expresion}) dx",
+            "formula_latex": f"\\int_{{{a}}}^{{{b}}} \\left({expresion}\\right) \\, dx",
+            "explicacion": "La integral definida nos da el valor numérico del área bajo la curva entre los límites dados.",
+        },
+        {
+            "numero": 2,
+            "titulo": "Calcular la primitiva F(x)",
+            "descripcion": "Primero calculamos la integral indefinida (primitiva):",
+            "formula": f"F(x) = {prim_latex} + C",
+            "formula_latex": f"F(x) = {prim_latex} + C",
+            "explicacion": "La primitiva es la función cuya derivada es el integrando original.",
+        },
+        {
+            "numero": 3,
+            "titulo": "Aplicar el Teorema Fundamental del Cálculo",
+            "descripcion": f"Evaluamos F({b}) − F({a}):",
+            "formula": f"F({b}) - F({a})",
+            "formula_latex": f"F({b}) - F({a}) = \\left[{prim_latex}\\right]_{{{a}}}^{{{b}}}",
+            "explicacion": "Sustituimos los límites superior e inferior en la primitiva y restamos.",
+        },
+        {
+            "numero": 4,
+            "titulo": "Resultado final",
+            "descripcion": f"El valor de la integral definida es:",
+            "formula": str(resultado),
+            "formula_latex": latex_r,
+            "explicacion": "Este valor representa el área neta bajo la curva en el intervalo dado.",
+        },
+    ]
+
+
+# ────────────────────────────────────────────────────────────────────
+# INTEGRALES DOBLES
+# ────────────────────────────────────────────────────────────────────
+
+def _pasos_integral_doble(expresion: str, calculo: dict) -> list:
+    resultado = calculo.get("simplificado", calculo.get("resultado", "?"))
+    latex_r   = calculo.get("simplificado_latex", calculo.get("resultado_latex", "?"))
+    ax = calculo.get("limite_inferior",   "a")
+    bx = calculo.get("limite_superior",   "b")
+    ay = calculo.get("limite_inferior_y", "c")
+    by = calculo.get("limite_superior_y", "d")
+
+    try:
+        x_sym = sp.Symbol("x")
+        y_sym = sp.Symbol("y")
+        local = {**_L, "y": y_sym}
+        expr = parse_expr(expresion, local_dict=local, transformations=_T)
+        integral_y = sp.integrate(expr, y_sym)
+        integ_y_latex = sp.latex(integral_y)
+    except Exception:
+        integ_y_latex = "G(x, y)"
+
+    return [
+        {
+            "numero": 1,
+            "titulo": "Plantear la integral doble",
+            "descripcion": f"Calculamos ∫∫ ({expresion}) sobre la región [{ax},{bx}]×[{ay},{by}]",
+            "formula": f"∫_{ax}^{bx} ∫_{ay}^{by} ({expresion}) dy dx",
+            "formula_latex": (
+                f"\\int_{{{ax}}}^{{{bx}}} \\int_{{{ay}}}^{{{by}}} "
+                f"\\left({expresion}\\right) \\, dy \\, dx"
+            ),
+            "explicacion": "La integral doble calcula el volumen bajo la superficie f(x,y) sobre una región rectangular.",
+        },
+        {
+            "numero": 2,
+            "titulo": "Integrar respecto a y (integral interior)",
+            "descripcion": f"Mantenemos x constante e integramos en y de {ay} a {by}:",
+            "formula": f"∫_{ay}^{by} ({expresion}) dy",
+            "formula_latex": (
+                f"\\int_{{{ay}}}^{{{by}}} \\left({expresion}\\right) \\, dy = "
+                f"\\left[{integ_y_latex}\\right]_{{{ay}}}^{{{by}}}"
+            ),
+            "explicacion": "En el primer paso, x se trata como una constante al integrar en y.",
+        },
+        {
+            "numero": 3,
+            "titulo": "Integrar respecto a x (integral exterior)",
+            "descripcion": f"Con el resultado anterior, integramos en x de {ax} a {bx}:",
+            "formula": f"∫_{ax}^{bx} g(x) dx",
+            "formula_latex": f"\\int_{{{ax}}}^{{{bx}}} g(x) \\, dx",
+            "explicacion": "Ahora la función resultante solo depende de x y podemos integrarla directamente.",
+        },
+        {
+            "numero": 4,
+            "titulo": "Resultado final",
+            "descripcion": "El valor de la integral doble es:",
+            "formula": str(resultado),
+            "formula_latex": latex_r,
+            "explicacion": "Este número representa el volumen del sólido bajo la superficie en la región dada.",
         },
     ]

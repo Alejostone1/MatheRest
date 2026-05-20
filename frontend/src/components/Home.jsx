@@ -376,6 +376,7 @@ export default function Home({ onEntrar }) {
           {[
             { ini:'DC', nombre:'Daniel Colorado',      rol:'Desarrollador', desc:'Diseño del sistema, implementación del backend Python/SymPy y lógica de detección de métodos matemáticos.', color:'#2563eb', bg:'#eff6ff', border:'#bfdbfe' },
             { ini:'AP', nombre:'Alejandro Piedrahita', rol:'Desarrollador', desc:'Desarrollo del frontend React, diseño de interfaz, integración API, exportación PDF/Excel y despliegue.', color:'#7c3aed', bg:'#f5f3ff', border:'#ddd6fe' },
+            { ini:'SP', nombre:'Sebastian Patiño',     rol:'Desarrollador', desc:'Implementación de la lógica de integrales, generación de pasos explicativos, pruebas del sistema y validación matemática.', color:'#d97706', bg:'#fffbeb', border:'#fde68a' },
           ].map(({ ini, nombre, rol, desc, color, bg, border }) => (
             <div key={nombre} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '24px', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = border; e.currentTarget.style.boxShadow = `0 4px 20px ${color}18` }}
@@ -428,7 +429,7 @@ export default function Home({ onEntrar }) {
           Abrir la aplicación <span style={{ fontSize:'1.2rem' }}>→</span>
         </button>
         <p style={{ color:'#334155', fontSize:'0.72rem', marginTop:32 }}>
-          Daniel Colorado · Alejandro Piedrahita — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
+          Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
         </p>
       </div>
 

@@ -4,7 +4,7 @@ const FUNCIONES = [
   { label: 'sin',  ins: 'sin()',  ret: 1, title: 'Seno' },
   { label: 'cos',  ins: 'cos()',  ret: 1, title: 'Coseno' },
   { label: 'tan',  ins: 'tan()',  ret: 1, title: 'Tangente' },
-  { label: 'ln',   ins: 'ln()',   ret: 1, title: 'Log natural' },
+  { label: 'ln',   ins: 'ln()',   ret: 1, title: 'Logaritmo natural' },
   { label: 'eˣ',   ins: 'exp()', ret: 1, title: 'Exponencial' },
   { label: '√',    ins: 'sqrt()', ret: 1, title: 'Raíz cuadrada' },
 ]
@@ -17,6 +17,7 @@ const POTENCIAS = [
 
 const VARS = [
   { label: 'x',  ins: 'x',   cls: 'key-btn key-var' },
+  { label: 'y',  ins: 'y',   cls: 'key-btn key-var' },
   { label: 'e',  ins: 'e',   cls: 'key-btn key-var' },
   { label: 'π',  ins: 'pi',  cls: 'key-btn key-var' },
   { label: '(',  ins: '(',   cls: 'key-btn key-op' },
@@ -31,8 +32,13 @@ const NUMS = ['7','8','9','4','5','6','1','2','3','0','.']
 
 function Seccion({ titulo, children }) {
   return (
-    <div style={{ marginBottom: 14 }}>
-      <p style={{ color: '#334155', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
+    <div style={{ marginBottom: 12 }}>
+      <p style={{
+        color: '#64748b', fontSize: '0.65rem', fontWeight: 700,
+        textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6,
+        display: 'flex', alignItems: 'center', gap: 6,
+      }}>
+        <span style={{ width: 3, height: 12, background: '#2563eb', borderRadius: 2, display: 'inline-block', flexShrink: 0 }} />
         {titulo}
       </p>
       {children}
@@ -40,19 +46,22 @@ function Seccion({ titulo, children }) {
   )
 }
 
-export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar }) {
+export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar, operacion }) {
+  const esDoble = operacion === 'integral_doble'
+
   return (
     <div style={{
       marginTop: 12,
-      background: '#070f1d',
-      border: '1px solid #1e293b',
-      borderRadius: 12,
-      padding: 16,
+      background: '#f8fafc',
+      border: '1.5px solid #e2e8f0',
+      borderRadius: 14,
+      padding: '16px 16px 12px',
+      boxShadow: '0 2px 8px rgba(15,23,42,0.06)',
     }} className="anim-fade">
 
       {/* Funciones */}
-      <Seccion titulo="Funciones trigonométricas y logarítmicas">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 6 }}>
+      <Seccion titulo="Funciones">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 5 }}>
           {FUNCIONES.map((f) => (
             <button
               key={f.label}
@@ -69,7 +78,7 @@ export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar }) {
 
       {/* Potencias */}
       <Seccion titulo="Potencias">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5 }}>
           {POTENCIAS.map((p) => (
             <button
               key={p.label}
@@ -84,8 +93,8 @@ export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar }) {
       </Seccion>
 
       {/* Variables y operadores */}
-      <Seccion titulo="Variables y operadores">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: 6 }}>
+      <Seccion titulo={esDoble ? 'Variables (x, y) y operadores' : 'Variables y operadores'}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 5 }}>
           {VARS.map((v) => (
             <button
               key={v.label}
@@ -99,13 +108,21 @@ export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar }) {
         </div>
       </Seccion>
 
+      {/* Divisor */}
+      <div style={{ borderTop: '1px solid #e2e8f0', margin: '8px 0 10px' }} />
+
       {/* Números + acciones */}
       <div style={{ display: 'flex', gap: 10 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ color: '#334155', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
+          <p style={{
+            color: '#64748b', fontSize: '0.65rem', fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6,
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span style={{ width: 3, height: 12, background: '#64748b', borderRadius: 2, display: 'inline-block', flexShrink: 0 }} />
             Números
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 5 }}>
             {NUMS.map((n) => (
               <button
                 key={n}
@@ -117,16 +134,19 @@ export default function TecladoMatematico({ onInsertar, onBorrar, onLimpiar }) {
                 {n}
               </button>
             ))}
-            <div /> {/* relleno */}
+            <div />
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'flex-end', minWidth: 64 }}>
-          <p style={{ color: '#334155', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 5, justifyContent: 'flex-end', minWidth: 56 }}>
+          <p style={{
+            color: '#64748b', fontSize: '0.65rem', fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6,
+          }}>
             Editar
           </p>
-          <button type="button" onClick={onBorrar}  className="key-btn key-del"   style={{ padding: '10px 8px' }}>⌫</button>
-          <button type="button" onClick={onLimpiar} className="key-btn key-clear" style={{ padding: '10px 8px' }}>C</button>
+          <button type="button" onClick={onBorrar}  className="key-btn key-del"   style={{ padding: '9px 6px' }}>⌫</button>
+          <button type="button" onClick={onLimpiar} className="key-btn key-clear" style={{ padding: '9px 6px' }}>C</button>
         </div>
       </div>
 

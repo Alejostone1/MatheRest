@@ -9,7 +9,11 @@ from app.models.respuesta import (
 )
 from app.core.detector.detector import detectar_metodo
 from app.core.solver.derivada import calcular_derivada
-from app.core.solver.integral import calcular_integral
+from app.core.solver.integral import (
+    calcular_integral,
+    calcular_integral_definida,
+    calcular_integral_doble,
+)
 from app.core.explicador.generador_pasos import generar_pasos
 
 router = APIRouter()
@@ -24,10 +28,23 @@ def resolver(peticion: PeticionSolver):
     # 1. Detectar método
     info_metodo = detectar_metodo(expresion, operacion)
 
-    # 2. Calcular
+    # 2. Calcular según la operación
     if operacion == "derivada":
         calculo = calcular_derivada(expresion)
-    else:
+
+    elif operacion == "integral_definida":
+        a = (peticion.limite_inferior or "0").strip()
+        b = (peticion.limite_superior or "1").strip()
+        calculo = calcular_integral_definida(expresion, a, b)
+
+    elif operacion == "integral_doble":
+        ax = (peticion.limite_inferior   or "0").strip()
+        bx = (peticion.limite_superior   or "1").strip()
+        ay = (peticion.limite_inferior_y or "0").strip()
+        by = (peticion.limite_superior_y or "1").strip()
+        calculo = calcular_integral_doble(expresion, ax, bx, ay, by)
+
+    else:  # "integral"
         calculo = calcular_integral(expresion)
 
     if calculo.get("error"):
