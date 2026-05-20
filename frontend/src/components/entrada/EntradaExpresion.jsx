@@ -121,7 +121,7 @@ export default function EntradaExpresion({ value, onChange, operacion, limites, 
 
       {/* Cabecera */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <p style={{ color: '#64748b', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+        <p style={{ color: '#334155', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
           Expresión matemática
         </p>
         <button
@@ -225,7 +225,7 @@ export default function EntradaExpresion({ value, onChange, operacion, limites, 
 
       {/* Ejemplos */}
       <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-        <span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600 }}>Ejemplos:</span>
+        <span style={{ color: '#475569', fontSize: '0.72rem', fontWeight: 600 }}>Ejemplos:</span>
         {ejemplos.map(({ label, val }) => (
           <button
             key={val}

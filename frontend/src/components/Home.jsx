@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 /* ── Estilos responsive ─────────────────────────────────── */
 const STYLES = `
   .home-nav-links { display: flex; align-items: center; gap: 24px; }
-  .home-nav-link  { color: #64748b; font-size: 0.85rem; text-decoration: none; font-weight: 500; }
+  .home-nav-link  { color: #475569; font-size: 0.85rem; text-decoration: none; font-weight: 500; }
   .home-nav-link:hover { color: #0f172a; }
 
   .home-hero      { background:#fff; border-bottom:1px solid #e2e8f0; padding:72px 32px 64px; }
@@ -11,14 +11,19 @@ const STYLES = `
 
   .home-h1        { font-size:2.6rem; font-weight:900; color:#0f172a; line-height:1.1; letter-spacing:-0.03em; margin:0 0 18px; }
   .home-cta-row   { display:flex; gap:12px; margin-bottom:36px; flex-wrap:wrap; }
-  .home-stats     { display:flex; gap:28px; }
+  .home-stats     { display:flex; gap:32px; flex-wrap:wrap; }
   .home-mock      { display:block; }
 
   .home-section   { padding:72px 32px; max-width:960px; margin:0 auto; }
-  .home-tech-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:14px; }
+
+  /* Tech grid — flex centrado */
+  .home-tech-grid { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .home-tech-card { flex:0 0 168px; }
+
   .home-team-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; }
 
-  .home-tabs      { display:flex; gap:4px; background:#f1f5f9; border-radius:10px; padding:4px; margin-bottom:24px; width:fit-content; margin-inline:auto; }
+  .home-tabs-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px; }
+  .home-tabs      { display:inline-flex; gap:4px; background:#f1f5f9; border-radius:10px; padding:4px; white-space:nowrap; }
 
   @media (max-width: 768px) {
     .home-nav-links a { display: none; }
@@ -27,10 +32,8 @@ const STYLES = `
     .home-h1        { font-size: 2rem; }
     .home-mock      { display: none; }
     .home-section   { padding: 48px 20px; }
-    .home-tech-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+    .home-tech-card { flex: 0 0 148px; }
     .home-team-grid { grid-template-columns: 1fr; }
-    .home-tabs      { width: 100%; }
-    .home-tabs button { flex: 1; }
     .home-cta-row   { flex-direction: column; }
     .home-cta-row a, .home-cta-row button { width: 100%; justify-content: center; box-sizing: border-box; }
     .home-stats     { gap: 20px; }
@@ -38,7 +41,7 @@ const STYLES = `
 
   @media (max-width: 480px) {
     .home-h1        { font-size: 1.75rem; }
-    .home-tech-grid { grid-template-columns: repeat(2,1fr); }
+    .home-tech-card { flex: 0 0 calc(50% - 7px); }
   }
 `
 
@@ -175,9 +178,35 @@ const INTEGRALES = [
   ['I8', 'Integración por partes', '∫u dv = uv − ∫v du',           'xeˣ → eˣ(x−1)+C'],
 ]
 
+const INTEGRALES_DEF = [
+  ['ID1', 'Potencia acotada',     '∫ₐᵇ xⁿ dx = [xⁿ⁺¹/(n+1)]ₐᵇ', '∫₀¹ x² dx = 1/3'],
+  ['ID2', 'Constante acotada',    '∫ₐᵇ k dx = k(b−a)',            '∫₀² 5 dx = 10'],
+  ['ID3', 'Seno acotado',         '∫₀^π sin(x) dx = 2',           '∫₀^π sin(x) dx = 2'],
+  ['ID4', 'Coseno acotado',       '∫₀^(π/2) cos(x) dx = 1',       '∫₀^(π/2) cos(x)dx = 1'],
+  ['ID5', 'Exponencial acotada',  '∫₀¹ eˣ dx = e − 1',            '∫₀¹ eˣ dx ≈ 1.718'],
+  ['ID6', 'T.F.C. — evaluación',  '∫ₐᵇ f(x)dx = F(b) − F(a)',    '∫₁ᵉ (1/x) dx = 1'],
+]
+
+const INTEGRALES_DOBLES = [
+  ['DD1', 'Suma de variables',      '∫∫(x+y) dydx',                    '∫₀²∫₀³(x+y)dydx = 15'],
+  ['DD2', 'Producto de variables',  '∫∫ x·y dydx',                     '∫₀¹∫₀¹ xy dydx = 1/4'],
+  ['DD3', 'Solo función de x',      '∫ₐᵇ∫_c^d f(x) dydx=(d−c)·∫ₐᵇ f', '∫₀²∫₀³ x dydx = 6'],
+  ['DD4', 'Solo función de y',      '∫ₐᵇ∫_c^d g(y) dydx=(b−a)·∫_c^d g','∫₀²∫₀² y dydx = 4'],
+  ['DD5', 'Potencias combinadas',   '∫∫(x²+y²) dydx',                  '∫₀¹∫₀¹(x²+y²)dydx=2/3'],
+  ['DD6', 'Teorema de Fubini',      '∫ₐᵇ[∫_c^d f(x,y)dy]dx',          'Iterar: y primero, luego x'],
+]
+
+const TABS = [
+  { id: 'derivadas',   label: '∂  Derivadas (12)',    color: '#1d4ed8', bgHead: '#eff6ff', data: DERIVADAS },
+  { id: 'integrales',  label: '∫  Integrales (8)',    color: '#15803d', bgHead: '#f0fdf4', data: INTEGRALES },
+  { id: 'definidas',   label: '∫ₐᵇ  Definidas (6)',   color: '#0891b2', bgHead: '#ecfeff', data: INTEGRALES_DEF },
+  { id: 'dobles',      label: '∬  Dobles (6)',        color: '#7c3aed', bgHead: '#f5f3ff', data: INTEGRALES_DOBLES },
+]
+
 /* ── Componente ─────────────────────────────────────────── */
 export default function Home({ onEntrar }) {
   const [tabMath, setTabMath] = useState('derivadas')
+  const tabActual = TABS.find(t => t.id === tabMath) || TABS[0]
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
@@ -213,9 +242,14 @@ export default function Home({ onEntrar }) {
 
           {/* Left */}
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 20, padding: '5px 14px', marginBottom: 20 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }}/>
-              <span style={{ color: '#1d4ed8', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.05em' }}>TRABAJO FINAL · MATEMÁTICAS 3</span>
+            {/* Badge profesional — sin burbuja, solo borde izquierdo */}
+            <div style={{ borderLeft: '3px solid #2563eb', paddingLeft: 12, marginBottom: 24 }}>
+              <p style={{ color: '#2563eb', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
+                Trabajo Final · Matemáticas 3
+              </p>
+              <p style={{ color: '#64748b', fontWeight: 500, fontSize: '0.78rem', margin: '3px 0 0' }}>
+                Cálculo Diferencial e Integral
+              </p>
             </div>
 
             <h1 className="home-h1">
@@ -225,9 +259,9 @@ export default function Home({ onEntrar }) {
             </h1>
 
             <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.7, margin: '0 0 28px' }}>
-              Analiza expresiones, detecta el método de resolución y explica
-              <strong style={{ color: '#0f172a' }}> paso a paso </strong>
-              el proceso completo de derivación e integración simbólica.
+              Resuelve derivadas, integrales indefinidas, definidas y dobles.
+              Detecta el método automáticamente y explica cada paso de forma
+              <strong style={{ color: '#0f172a' }}> clara y rigurosa</strong>.
             </p>
 
             <div className="home-cta-row">
@@ -243,17 +277,23 @@ export default function Home({ onEntrar }) {
               </a>
             </div>
 
+            {/* Stats — 4 tipos de operación */}
             <div className="home-stats">
-              {[['20','Casos totales'],['12','Derivadas'],['8','Integrales']].map(([n,t]) => (
+              {[
+                ['4',   '#2563eb', 'Tipos de operación'],
+                ['12',  '#7c3aed', 'Casos de derivadas'],
+                ['8',   '#059669', 'Integrales indefinidas'],
+                ['∞',   '#0891b2', 'Definidas + Dobles'],
+              ].map(([n, color, t]) => (
                 <div key={t}>
-                  <p style={{ fontWeight: 900, fontSize: '1.7rem', color: '#2563eb', margin: 0, lineHeight: 1 }}>{n}</p>
-                  <p style={{ color: '#94a3b8', fontSize: '0.72rem', margin: '3px 0 0', fontWeight: 500 }}>{t}</p>
+                  <p style={{ fontWeight: 900, fontSize: '1.7rem', color, margin: 0, lineHeight: 1 }}>{n}</p>
+                  <p style={{ color: '#64748b', fontSize: '0.7rem', margin: '3px 0 0', fontWeight: 500, maxWidth: 80 }}>{t}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right: preview card (oculto en móvil) */}
+          {/* Right: preview card */}
           <div className="home-mock" style={{ position: 'relative' }}>
             <div style={{ background: '#0f172a', borderRadius: 16, padding: '20px 24px', boxShadow: '0 20px 60px rgba(15,23,42,0.25)', border: '1px solid #1e293b' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
@@ -299,23 +339,25 @@ export default function Home({ onEntrar }) {
       {/* ══ TECNOLOGÍAS ════════════════════════════════════ */}
       <div id="tecnologias" className="home-section">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Stack técnico</p>
+          <p style={{ color: '#64748b', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Stack técnico</p>
           <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Tecnologías implementadas</h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0, maxWidth: 520, marginInline: 'auto' }}>
+          <p style={{ color: '#475569', fontSize: '0.95rem', margin: 0, maxWidth: 520, marginInline: 'auto' }}>
             Seleccionadas para garantizar precisión matemática simbólica y una experiencia de usuario fluida
           </p>
         </div>
 
+        {/* Tarjetas centradas con flex */}
         <div className="home-tech-grid">
           {TECNOLOGIAS.map(({ icon, nombre, rol, tag }) => {
             const tc = TAG_COLORS[tag]
             return (
-              <div key={nombre} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 16px', transition: 'all 0.2s', cursor: 'default' }}
+              <div key={nombre} className="home-tech-card"
+                style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 16px', transition: 'all 0.2s', cursor: 'default', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
                 onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(15,23,42,0.10)'; e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.transform = 'translateY(-2px)' }}
                 onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.transform = 'none' }}>
                 <div style={{ width: 44, height: 44, marginBottom: 12 }}>{SVG[icon]}</div>
                 <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.88rem', margin: '0 0 4px' }}>{nombre}</p>
-                <p style={{ color: '#64748b', fontSize: '0.73rem', margin: '0 0 10px', lineHeight: 1.4 }}>{rol}</p>
+                <p style={{ color: '#475569', fontSize: '0.73rem', margin: '0 0 10px', lineHeight: 1.4 }}>{rol}</p>
                 <span style={{ background: tc.bg, color: tc.color, border: `1px solid ${tc.border}`, borderRadius: 20, padding: '2px 8px', fontSize: '0.65rem', fontWeight: 700 }}>{tag}</span>
               </div>
             )
@@ -326,36 +368,48 @@ export default function Home({ onEntrar }) {
       {/* ══ COBERTURA MATEMÁTICA ═══════════════════════════ */}
       <div id="matematica" style={{ background: '#fff', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', padding: '72px 20px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Contenido académico</p>
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <p style={{ color: '#64748b', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Contenido académico</p>
             <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Cobertura matemática</h2>
-            <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>Todos los casos vistos en Matemáticas 3 — 20 casos garantizados al 100%</p>
+            <p style={{ color: '#475569', fontSize: '0.95rem', margin: 0 }}>
+              4 tipos de operación — 12 derivadas · 8 integrales indefinidas · integrales definidas y dobles con límites exactos
+            </p>
           </div>
 
-          <div className="home-tabs">
-            {[['derivadas','∂  Derivadas (12)'],['integrales','∫  Integrales (8)']].map(([id,label]) => (
-              <button key={id} onClick={() => setTabMath(id)} style={{ padding:'8px 20px', borderRadius:8, border:'none', fontWeight:700, fontSize:'0.85rem', cursor:'pointer', transition:'all 0.15s', background: tabMath===id ? '#fff' : 'transparent', color: tabMath===id ? '#0f172a' : '#64748b', boxShadow: tabMath===id ? '0 1px 4px rgba(15,23,42,0.1)' : 'none' }}>
-                {label}
-              </button>
-            ))}
+          {/* Tabs scrollable */}
+          <div className="home-tabs-wrap" style={{ textAlign: 'center', marginBottom: 24 }}>
+            <div className="home-tabs">
+              {TABS.map(({ id, label, color }) => (
+                <button key={id} onClick={() => setTabMath(id)} style={{
+                  padding: '8px 18px', borderRadius: 8, border: 'none',
+                  fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  background: tabMath === id ? '#fff' : 'transparent',
+                  color: tabMath === id ? color : '#64748b',
+                  boxShadow: tabMath === id ? '0 1px 4px rgba(15,23,42,0.1)' : 'none',
+                }}>
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid #e2e8f0' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', minWidth: 420 }}>
               <thead>
-                <tr style={{ background: tabMath === 'derivadas' ? '#eff6ff' : '#f0fdf4' }}>
+                <tr style={{ background: tabActual.bgHead }}>
                   {['ID','Caso','Fórmula','Ejemplo'].map(h => (
-                    <th key={h} style={{ padding:'11px 14px', textAlign:'left', color: tabMath==='derivadas'?'#1d4ed8':'#15803d', fontWeight:700, fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'0.08em', borderBottom:'1px solid #e2e8f0', whiteSpace:'nowrap' }}>{h}</th>
+                    <th key={h} style={{ padding:'11px 14px', textAlign:'left', color: tabActual.color, fontWeight:700, fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'0.08em', borderBottom:'1px solid #e2e8f0', whiteSpace:'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {(tabMath==='derivadas' ? DERIVADAS : INTEGRALES).map(([id,caso,formula,ejemplo],i) => (
+                {tabActual.data.map(([id, caso, formula, ejemplo], i) => (
                   <tr key={id} style={{ borderBottom:'1px solid #f1f5f9', background: i%2===0?'#fff':'#fafafa' }}>
-                    <td style={{ padding:'10px 14px', fontWeight:800, color: tabMath==='derivadas'?'#2563eb':'#16a34a', fontFamily:'monospace', fontSize:'0.78rem', whiteSpace:'nowrap' }}>{id}</td>
+                    <td style={{ padding:'10px 14px', fontWeight:800, color: tabActual.color, fontFamily:'monospace', fontSize:'0.78rem', whiteSpace:'nowrap' }}>{id}</td>
                     <td style={{ padding:'10px 14px', color:'#0f172a', fontWeight:600 }}>{caso}</td>
-                    <td style={{ padding:'10px 14px', color:'#475569', fontFamily:'monospace', fontSize:'0.75rem', whiteSpace:'nowrap' }}>{formula}</td>
-                    <td style={{ padding:'10px 14px', color:'#64748b', fontFamily:'monospace', fontSize:'0.75rem', whiteSpace:'nowrap' }}>{ejemplo}</td>
+                    <td style={{ padding:'10px 14px', color:'#334155', fontFamily:'monospace', fontSize:'0.75rem' }}>{formula}</td>
+                    <td style={{ padding:'10px 14px', color:'#475569', fontFamily:'monospace', fontSize:'0.75rem', whiteSpace:'nowrap' }}>{ejemplo}</td>
                   </tr>
                 ))}
               </tbody>
@@ -367,9 +421,9 @@ export default function Home({ onEntrar }) {
       {/* ══ EQUIPO ══════════════════════════════════════════ */}
       <div id="equipo" className="home-section">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Créditos académicos</p>
+          <p style={{ color: '#64748b', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Créditos académicos</p>
           <h2 style={{ fontWeight: 900, fontSize: '1.9rem', color: '#0f172a', margin: '0 0 12px', letterSpacing: '-0.02em' }}>Equipo de desarrollo</h2>
-          <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>Trabajo Final presentado para la asignatura Matemáticas 3</p>
+          <p style={{ color: '#475569', fontSize: '0.95rem', margin: 0 }}>Trabajo Final presentado para la asignatura Matemáticas 3</p>
         </div>
 
         <div className="home-team-grid">
@@ -388,7 +442,7 @@ export default function Home({ onEntrar }) {
                   <span style={{ background:bg, color, border:`1px solid ${border}`, borderRadius:20, padding:'2px 10px', fontSize:'0.7rem', fontWeight:700 }}>{rol}</span>
                 </div>
               </div>
-              <p style={{ color:'#64748b', fontSize:'0.83rem', lineHeight:1.6, margin:0 }}>{desc}</p>
+              <p style={{ color:'#475569', fontSize:'0.83rem', lineHeight:1.6, margin:0 }}>{desc}</p>
             </div>
           ))}
 
@@ -403,7 +457,7 @@ export default function Home({ onEntrar }) {
                 <span style={{ background:'#f0fdf4', color:'#15803d', border:'1px solid #86efac', borderRadius:20, padding:'2px 10px', fontSize:'0.7rem', fontWeight:700 }}>Docente</span>
               </div>
             </div>
-            <p style={{ color:'#64748b', fontSize:'0.83rem', lineHeight:1.6, margin:'0 0 12px' }}>
+            <p style={{ color:'#475569', fontSize:'0.83rem', lineHeight:1.6, margin:'0 0 12px' }}>
               Profesor de Matemáticas 3 — Cálculo Diferencial e Integral. Propuso el desarrollo de una herramienta que refuerce el aprendizaje de los métodos de derivación e integración.
             </p>
             <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:8, padding:'8px 12px', display:'flex', alignItems:'center', gap:8 }}>
@@ -414,21 +468,23 @@ export default function Home({ onEntrar }) {
         </div>
       </div>
 
-      {/* ══ CTA FINAL ═══════════════════════════════════════ */}
-      <div style={{ background: '#0f172a', padding: '60px 20px', textAlign: 'center' }}>
-        <p style={{ color: '#94a3b8', fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 14px' }}>Listo para usar</p>
-        <h2 style={{ color: '#f8fafc', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+      {/* ══ CTA FINAL — fondo claro, letras oscuras ════════ */}
+      <div style={{ background: '#f1f5f9', borderTop: '1px solid #e2e8f0', padding: '60px 20px', textAlign: 'center' }}>
+        <p style={{ color: '#64748b', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 14px' }}>
+          Listo para usar
+        </p>
+        <h2 style={{ color: '#0f172a', fontWeight: 900, fontSize: '1.8rem', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
           Empieza a resolver expresiones
         </h2>
         <p style={{ color: '#475569', fontSize: '0.95rem', margin: '0 0 30px' }}>
-          Ingresa cualquier derivada o integral y obtén la solución completa paso a paso
+          Derivadas, integrales indefinidas, definidas y dobles — con solución paso a paso
         </p>
-        <button onClick={onEntrar} style={{ background:'#2563eb', color:'#fff', border:'none', borderRadius:12, padding:'14px 36px', fontSize:'1rem', fontWeight:800, cursor:'pointer', boxShadow:'0 4px 20px rgba(37,99,235,0.4)', display:'inline-flex', alignItems:'center', gap:10 }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(37,99,235,0.5)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(37,99,235,0.4)' }}>
+        <button onClick={onEntrar} style={{ background:'#2563eb', color:'#fff', border:'none', borderRadius:12, padding:'14px 36px', fontSize:'1rem', fontWeight:800, cursor:'pointer', boxShadow:'0 4px 20px rgba(37,99,235,0.3)', display:'inline-flex', alignItems:'center', gap:10 }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(37,99,235,0.4)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(37,99,235,0.3)' }}>
           Abrir la aplicación <span style={{ fontSize:'1.2rem' }}>→</span>
         </button>
-        <p style={{ color:'#334155', fontSize:'0.72rem', marginTop:32 }}>
+        <p style={{ color: '#0f172a', fontSize: '0.75rem', marginTop: 32, fontWeight: 500 }}>
           Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
         </p>
       </div>

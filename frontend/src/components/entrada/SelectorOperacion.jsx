@@ -43,7 +43,7 @@ export default function SelectorOperacion({ value, onChange }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <p style={{
-        color: '#64748b', fontSize: '0.72rem', fontWeight: 700,
+        color: '#334155', fontSize: '0.72rem', fontWeight: 700,
         letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8,
       }}>
         Operación

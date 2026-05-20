@@ -80,7 +80,7 @@ export default function App() {
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px', letterSpacing: '-0.02em' }}>
             Resolver expresión
           </h1>
-          <p style={{ color: '#64748b', fontSize: '0.92rem', margin: 0 }}>
+          <p style={{ color: '#334155', fontSize: '0.92rem', margin: 0 }}>
             Ingresa la expresión · selecciona la operación · obtén la solución paso a paso
           </p>
         </header>
@@ -108,7 +108,7 @@ export default function App() {
 
         {historial.length > 0 && !resultado && (
           <div className="card anim-fade" style={{ marginTop: 16 }}>
-            <p style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+            <p style={{ color: '#334155', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
               Historial reciente
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -136,7 +136,7 @@ export default function App() {
           </div>
         )}
 
-        <footer style={{ textAlign: 'center', marginTop: 48, color: '#cbd5e1', fontSize: '0.72rem' }}>
+        <footer style={{ textAlign: 'center', marginTop: 48, color: '#0f172a', fontSize: '0.72rem', fontWeight: 500 }}>
           Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
         </footer>
       </div>
