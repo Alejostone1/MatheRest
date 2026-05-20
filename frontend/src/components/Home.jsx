@@ -477,9 +477,15 @@ export default function Home({ onEntrar }) {
           onMouseLeave={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(37,99,235,0.3)' }}>
           Abrir la aplicación <span style={{ fontSize:'1.2rem' }}>→</span>
         </button>
-        <p style={{ color: '#0f172a', fontSize: '0.75rem', marginTop: 32, fontWeight: 500 }}>
-          Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño — Matemáticas 3 · Prof. Cristhian Camilo Sánchez Ceballos
-        </p>
+        <div style={{ marginTop: 36, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>
+          <p style={{ color: '#475569', fontSize: '0.8rem', margin: '0 0 6px', lineHeight: 1.6 }}>
+            Esta aplicación fue desarrollada como <strong style={{ color: '#0f172a' }}>Trabajo Final de la asignatura Matemáticas 3</strong> — Cálculo Diferencial e Integral,
+            orientada por el <strong style={{ color: '#0f172a' }}>Profesor Cristhian Camilo Sánchez Ceballos</strong>.
+          </p>
+          <p style={{ color: '#64748b', fontSize: '0.75rem', margin: 0 }}>
+            Desarrollada por <strong style={{ color: '#334155' }}>Daniel Colorado · Alejandro Piedrahita · Sebastian Patiño</strong>
+          </p>
+        </div>
       </div>
 
     </div>
